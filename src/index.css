@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-black text-white antialiased;
+}
+
+input, textarea {
+  @apply bg-black/80 border-2 border-primary/50 focus:border-primary text-white rounded-lg px-4 py-2;
+  box-shadow: 0 0 5px theme('colors.primary.DEFAULT');
+}
+
+input:focus, textarea:focus {
+  box-shadow: 0 0 15px theme('colors.primary.DEFAULT');
+  outline: none;
+}
+
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  position: relative;
+  animation: typing 3s steps(30) infinite;
+}
+
+.typewriter::after {
+  content: "|";
+  position: absolute;
+  right: 0;
+  animation: caret 0.5s step-end infinite;
+}
+
+@keyframes typing {
+  0%, 100% { 
+    width: 0 
+  }
+  50%, 70% { 
+    width: 100% 
+  }
+}
+
+@keyframes caret {
+  from, to { 
+    color: transparent 
+  }
+  50% { 
+    color: theme('colors.primary.DEFAULT')
+  }
+}
+
+/* Neon effect for form elements */
+.neon-glow {
+  position: relative;
+}
+
+.neon-glow::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: theme('colors.primary.DEFAULT');
+  z-index: -1;
+  filter: blur(15px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.neon-glow:focus-within::before {
+  opacity: 0.5;
+}
