@@ -99,11 +99,7 @@ export default function Hero() {
           className="relative order-first lg:order-last"
         >
           <img
-<<<<<<< HEAD
             src="bhuvan-port.png"
-=======
-            src="public\bhuvan-port.png"
->>>>>>> 3f07cc2b748268b61846209ff97806fe0b2e6abb
             alt="Profile"
             className="rounded-full shadow-2xl w-full max-w-md mx-auto"
           />
