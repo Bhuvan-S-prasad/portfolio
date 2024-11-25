@@ -57,7 +57,7 @@ export default function Hero() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-6">
             <a
-              href="public/BHUVAN_CV (2).pdf"
+              href="BHUVAN_CV.pdf"
               download
               className="inline-flex items-center px-6 py-3 bg-primary text-black rounded-lg font-semibold 
               transform hover:scale-105 hover:bg-primary-hover transition-all duration-300 shadow-lg 
