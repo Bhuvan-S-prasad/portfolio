@@ -82,6 +82,39 @@ export default function Skills() {
     threshold: 0.1,
   });
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { scale: 0, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 200,
+        damping: 15
+      }
+    },
+    hover: {
+      scale: 1.1,
+      boxShadow: "0 0 20px rgba(255, 215, 0, 0.3)",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }
+    }
+  };
+
   return (
     <section id="skills" className="py-20 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,30 +125,54 @@ export default function Skills() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold text-yellow-500 mb-4">Skills</h2>
-          <p className="text-xl text-gray-300">Technologies I work with</p>
+          <motion.h2 
+            className="text-4xl font-bold text-yellow-500 mb-4"
+            animate={{ 
+              textShadow: ["0 0 10px rgba(255, 215, 0, 0.5)", "0 0 20px rgba(255, 215, 0, 0.8)", "0 0 10px rgba(255, 215, 0, 0.5)"]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            Skills
+          </motion.h2>
+          <motion.p 
+            className="text-xl text-gray-300"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            Technologies I work with
+          </motion.p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8"
+        >
           {skills.map((skill, index) => (
             <motion.div
               key={skill.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="flex flex-col items-center justify-center p-4 bg-black/50 rounded-lg border border-yellow-500/20 hover:border-yellow-500/50 transition-colors group"
+              variants={itemVariants}
+              whileHover="hover"
+              className="flex flex-col items-center justify-center p-4 bg-black/50 rounded-lg border border-yellow-500/20 hover:border-yellow-500/50 transition-colors"
             >
-              <img
+              <motion.img
                 src={skill.icon}
                 alt={skill.name}
-                className="w-12 h-12 mb-3 transition-transform group-hover:scale-110"
+                className="w-12 h-12 mb-3"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
               />
-              <span className="text-gray-300 group-hover:text-yellow-500 text-sm text-center transition-colors">
+              <motion.span 
+                className="text-gray-300 group-hover:text-yellow-500 text-sm text-center"
+                whileHover={{ scale: 1.1 }}
+              >
                 {skill.name}
-              </span>
+              </motion.span>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
