@@ -12,7 +12,7 @@ export default function About() {
     {
       icon: <Code2 className="w-8 h-8" />,
       title: "web development",
-      description: "Experienced in both frontend technologies"
+      description: "Experienced in frontend technologies"
     },
     {
       icon: <Brain className="w-8 h-8" />,
