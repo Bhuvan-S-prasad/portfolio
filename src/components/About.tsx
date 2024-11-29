@@ -16,7 +16,7 @@ export default function About() {
     },
     {
       icon: <Brain className="w-8 h-8" />,
-      title: "AI & ML Specialist",
+      title: "AI & ML",
       description: "Focused on developing intelligent solutions"
     },
     {
