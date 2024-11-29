@@ -11,8 +11,8 @@ export default function About() {
   const features = [
     {
       icon: <Code2 className="w-8 h-8" />,
-      title: "Full Stack Development",
-      description: "Experienced in both frontend and backend technologies"
+      title: "web development",
+      description: "Experienced in both frontend technologies"
     },
     {
       icon: <Brain className="w-8 h-8" />,
@@ -22,7 +22,7 @@ export default function About() {
     {
       icon: <Rocket className="w-8 h-8" />,
       title: "Innovation Driven",
-      description: "Passionate about creating impactful solutions"
+      description: "leveraging AI tool to increase effciency and productivity"
     }
   ];
 
