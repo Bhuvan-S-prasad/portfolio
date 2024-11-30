@@ -8,15 +8,15 @@ const projects = [
     description: 'Developed a sophisticated bird species classification system using CNN ResNet50 architecture. The model can identify various bird species with high accuracy, leveraging transfer learning and fine-tuning techniques.',
     image: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&q=80',
     github: 'https://github.com/Bhuvan-S-prasad',
-    live: 'https://example.com',
-    tags: ['Python', 'TensorFlow', 'ResNet50', 'CNN', 'Deep Learning']
+    live: '#',
+    tags: ['Python', 'pytorch', 'ResNet50', 'CNN', 'Deep Learning']
   },
   {
     title: 'Plant Disease Detection',
     description: 'Created an advanced plant disease detection system using Convolutional Neural Networks. This system helps farmers identify plant diseases early, enabling timely intervention and crop protection.',
     image: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&q=80',
     github: 'https://github.com/Bhuvan-S-prasad',
-    live: 'https://example.com',
+    live: '#',
     tags: ['Python', 'CNN', 'OpenCV', 'Deep Learning']
   },
   {
@@ -24,7 +24,7 @@ const projects = [
     description: 'Implemented an explainable CNN model for brain tumor detection from MRI scans. The model not only detects tumors but also provides visual explanations for its decisions, enhancing trust in AI diagnostics.',
     image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80',
     github: 'https://github.com/Bhuvan-S-prasad',
-    live: 'https://example.com',
+    live: '#',
     tags: ['Python', 'CNN', 'XAI', 'Medical Imaging', 'PyTorch']
   }
 ];
