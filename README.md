@@ -8,7 +8,7 @@ Welcome to my **Portfolio Website**! This project is a personal portfolio built 
 
 - **Framework**: React + Vite ⚡
 - **Language**: TypeScript 💡
-- **Styling**: CSS/SCSS/Styled-Components (customizable)
+- **Styling**: CSS
 - **Deployment**: Hosted on **GitHub Pages** via [git.io](https://git.io)
 
 ---
