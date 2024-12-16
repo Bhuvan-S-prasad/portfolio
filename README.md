@@ -25,7 +25,7 @@ Welcome to my **Portfolio Website**! This project is a personal portfolio built 
 
 ## 🌍 Live Demo
 
-Visit my portfolio: [https://git.io/your-portfolio-link](https://git.io/your-portfolio-link)
+Visit my portfolio: [https://bhuvan-s-prasad.github.io/portfolio/](https://bhuvan-s-prasad.github.io/portfolio/)
 
 ---
 
@@ -52,7 +52,8 @@ npm run dev
 
 ```
 npm run build
-``
+```
+
 ## 📧 Contact
 
 Feel free to reach out if you have any questions or suggestions:
