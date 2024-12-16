@@ -59,4 +59,4 @@ npm run build
 Feel free to reach out if you have any questions or suggestions:
 
 - Email: bhuvansprasad20@gmail.com
-- LinkedIn: linkedin.com/in/yourprofile
+- LinkedIn: [linkedin.com/in/yourprofile](https://www.linkedin.com/in/bhuvan-s-prasad/)
