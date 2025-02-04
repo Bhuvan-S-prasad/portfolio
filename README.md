@@ -27,29 +27,18 @@ Welcome to my **Portfolio Website**! This project is a personal portfolio built 
 
 
 
-### Key Features & Libraries
-- 🎨 Framer Motion for smooth animations
-- 🌟 TSParticles for interactive background
-- 📱 Fully responsive design with css
-- 🔍 React Intersection Observer for scroll animations
+## ✨ Features & Libraries
 
-
-
-- 🎯 Lucide React for beautiful icons
-
-
----
-
-## ✨ Features
-
-- Responsive and modern UI/UX 🎨
-- Fully typed components and state management ✅
-- Lightning-fast builds with Vite 🚀
-- SEO-friendly with meta tags optimization 🌐
-- Easy to update content and extend functionality 🛠️
-- Interactive particle background 🌟
-- Smooth scroll animations ⚡
-- Contact form integration 📧
+- 🎨 Responsive and modern UI/UX with Framer Motion animations
+- 🌟 Interactive particle background using TSParticles
+- 📱 Fully responsive design with CSS
+- ✅ Fully typed components and state management
+- 🚀 Lightning-fast builds with Vite
+- 🌐 SEO-friendly with meta tags optimization
+- 🛠️ Easy to update content and extend functionality
+- ⚡ Smooth scroll animations with React Intersection Observer
+- 🎯 Beautiful icons using Lucide React
+- 📧 Contact form integration
 
 ---
 
