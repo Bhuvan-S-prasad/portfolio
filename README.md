@@ -53,6 +53,8 @@ npm run dev
 ```
 npm run build
 ```
+5. **changes**:
+   - using this project as template make changes in the component accordingly
 
 ## 📧 Contact
 
