@@ -23,6 +23,11 @@ const skills = [
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg'
   },
   {
+    name: 'Flask',
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original-wordmark.svg',
+    className: 'invert'
+  },
+  {
     name: 'HTML5',
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg'
   },
@@ -33,6 +38,10 @@ const skills = [
   {
     name: 'JavaScript',
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg'
+  },
+  {
+    name: 'MLflow',
+    icon: 'https://raw.githubusercontent.com/mlflow/mlflow/master/assets/icon.svg'
   },
   {
     name: 'MongoDB',
@@ -63,6 +72,10 @@ const skills = [
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg'
   },
   {
+    name: 'React',
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg'
+  },
+  {
     name: 'Scikit-Learn',
     icon: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg'
   },
@@ -73,6 +86,10 @@ const skills = [
   {
     name: 'TensorFlow',
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg'
+  },
+  {
+    name: 'TypeScript',
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg'
   }
 ];
 
@@ -160,7 +177,7 @@ export default function Skills() {
               <motion.img
                 src={skill.icon}
                 alt={skill.name}
-                className="w-12 h-12 mb-3"
+                className={`w-12 h-12 mb-3 ${skill.className || ''}`}
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.5 }}
               />

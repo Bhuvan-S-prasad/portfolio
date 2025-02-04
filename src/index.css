@@ -11,12 +11,10 @@ body {
 }
 
 input, textarea {
-  @apply bg-black/80 border-2 border-primary/50 focus:border-primary text-white rounded-lg px-4 py-2;
-  box-shadow: 0 0 5px theme('colors.primary.DEFAULT');
+  @apply bg-black/80 border-2 border-primary/50 focus:border-primary text-white rounded-lg px-4 py-2 transition-all duration-300;
 }
 
 input:focus, textarea:focus {
-  box-shadow: 0 0 15px theme('colors.primary.DEFAULT');
   outline: none;
 }
 

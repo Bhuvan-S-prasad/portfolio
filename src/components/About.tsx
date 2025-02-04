@@ -17,7 +17,7 @@ export default function About() {
     {
       icon: <Brain className="w-8 h-8" />,
       title: "AI & ML",
-      description: "Focused on developing intelligent solutions"
+      description: "training and deploying machine learning models"
     },
     {
       icon: <Rocket className="w-8 h-8" />,
@@ -37,8 +37,8 @@ export default function About() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-yellow-500 mb-4">About Me</h2>
-          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-            I am Bhuvan, a Computer Science and Artificial Intelligence student currently in my fifth semester. With a strong foundation in programming languages like Python, Java, C++, and JavaScript, I specialize in developing machine learning models and full-stack web applications. My education has equipped me with analytical problem-solving skills and a passion for innovation. In the future, I aim to contribute to groundbreaking advancements in AI and its applications in fields like healthcare, environmental sustainability, and forensic science. I am continually enhancing my skills in deep learning, data analysis, and model explainability, with a vision to build impactful solutions that address real-world challenges.
+          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12 text-justify">
+            I am Bhuvan, a Computer Science and Artificial Intelligence student currently in my sixth semester. With a strong foundation in programming languages like Python, Java, C++, and JavaScript, I specialize in developing machine learning models and full-stack web applications. My education has equipped me with analytical problem-solving skills and a passion for innovation. In the future, I aim to contribute to groundbreaking advancements in AI and its applications in fields like healthcare, environmental sustainability, and forensic science. I am continually enhancing my skills in deep learning, data analysis, and model explainability, with a vision to build impactful solutions that address real-world challenges.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
