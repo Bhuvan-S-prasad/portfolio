@@ -46,7 +46,7 @@ const projects = [
   {
     title: 'sentiment analysis of tweets',
     description: 'A real-time sentiment analysis platform leveraging deep learning and NLP techniques to classify text into multiple sentiment categories.',
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80',
     github: 'https://github.com/Bhuvan-S-prasad/sentiment-analysis', 
     live: '#',
     tags: ['Python', 'distilbert-base-uncased', 'Scikit-Learn',"NLP","pytorch","transformers"]
