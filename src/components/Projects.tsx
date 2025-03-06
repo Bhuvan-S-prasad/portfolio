@@ -4,6 +4,14 @@ import { ExternalLink, Github } from 'lucide-react';
 
 const projects = [
   {
+    title: 'Advanced brain tumor detection using ensemble of deep learning models with explainable AI visualization',
+    description: 'An ensemble deep learning approach for brain tumor detection and classification using multiple state-of-the-art convolutional neural networks with explainable AI techniques',
+    image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80',
+    github: 'https://github.com/Bhuvan-S-prasad/Ensembling-brain-tumor-detection',
+    live: '#',
+    tags: ['Python', 'CNN', 'XAI', 'Medical Imaging', 'PyTorch']
+  },
+  {
     title: 'Bird Image Classification',
     description: 'Developed a sophisticated bird species classification system using CNN ResNet50 architecture. The model can identify various bird species with high accuracy, leveraging transfer learning and fine-tuning techniques.',
     image: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&q=80',
@@ -26,14 +34,6 @@ const projects = [
     github: 'https://github.com/Bhuvan-S-prasad/Plant-Disease-Detection-AI',
     live: '#',
     tags: ['Python', 'CNN', 'OpenCV', 'Deep Learning']
-  },
-  {
-    title: 'Brain Tumor Detection',
-    description: 'Implemented an explainable CNN model for brain tumor detection from MRI scans. The model not only detects tumors but also provides visual explanations for its decisions, enhancing trust in AI diagnostics.',
-    image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80',
-    github: 'https://github.com/Bhuvan-S-prasad/Brain_tumor_detection_',
-    live: '#',
-    tags: ['Python', 'CNN', 'XAI', 'Medical Imaging', 'PyTorch']
   },
   {
     title: 'Alzheimer\'s Disease Diagnosis prediction',
