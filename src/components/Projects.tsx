@@ -7,7 +7,7 @@ const projects = [
     title: 'Advanced brain tumor detection using ensemble of deep learning models with explainable AI visualization',
     description: 'An ensemble deep learning approach for brain tumor detection and classification using multiple state-of-the-art convolutional neural networks with explainable AI techniques',
     image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80',
-    github: 'https://github.com/Bhuvan-S-prasad/Ensembling-brain-tumor-detection',
+    github: 'https://github.com/Bhuvan-S-prasad/',
     live: '#',
     tags: ['Python', 'CNN', 'XAI', 'Medical Imaging', 'PyTorch']
   },
