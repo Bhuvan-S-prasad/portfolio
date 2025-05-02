@@ -40,6 +40,10 @@ const skills = [
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg'
   },
   {
+    name: 'LangChain',
+    icon: 'https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/langchain-color.png'
+  },
+  {
     name: 'MLflow',
     icon: 'https://raw.githubusercontent.com/mlflow/mlflow/master/assets/icon.svg'
   },
