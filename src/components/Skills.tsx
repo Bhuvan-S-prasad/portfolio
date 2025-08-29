@@ -2,25 +2,10 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 const skills = [
-  {
-    name: 'Bootstrap',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg'
-  },
-  {
-    name: 'C',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg'
-  },
-  {
-    name: 'C++',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg'
-  },
+
   {
     name: 'CSS3',
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg'
-  },
-  {
-    name: 'Figma',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg'
   },
   {
     name: 'Flask',
@@ -30,10 +15,6 @@ const skills = [
   {
     name: 'HTML5',
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg'
-  },
-  {
-    name: 'Java',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg'
   },
   {
     name: 'JavaScript',
@@ -48,10 +29,6 @@ const skills = [
     icon: 'https://raw.githubusercontent.com/mlflow/mlflow/master/assets/icon.svg'
   },
   {
-    name: 'MongoDB',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg'
-  },
-  {
     name: 'MySQL',
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg'
   },
@@ -62,10 +39,6 @@ const skills = [
   {
     name: 'Pandas',
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg'
-  },
-  {
-    name: 'PHP',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg'
   },
   {
     name: 'Python',
@@ -90,10 +63,6 @@ const skills = [
   {
     name: 'TensorFlow',
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg'
-  },
-  {
-    name: 'TypeScript',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg'
   }
 ];
 
