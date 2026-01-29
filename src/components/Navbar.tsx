@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { Items, Socials } from "../constants/Index"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
-import { Link } from "react-scroll"
+import { useLenis } from "lenis/react"
 
 const Navbar = () => {
 
@@ -17,6 +17,7 @@ const Navbar = () => {
 
     const [isOpen, setIsOpen] = useState(false)
     const [showMenuIcon, setShowMenuIcon] = useState(true)
+    const lenis = useLenis()
 
     useGSAP(() => {
         gsap.set(navRef.current, { xPercent: 100 });
@@ -92,12 +93,12 @@ const Navbar = () => {
                 <div className="flex flex-col text-5xl gap-y-2 md:text-6xl lg:text-8xl">
                     {Items.map((section, index) => (
                         <div key={index} ref={(element) => { linksRef.current[index] = element }}>
-                            <Link
-                                to={section.href}
-                                smooth
-                                offset={0}
-                                duration={2000}
-                                className="transition-all duration-300 cursor-pointer hover:text-white">{section.name}</Link>
+                            <button
+                                onClick={() => {
+                                    lenis?.scrollTo(section.href, { duration: 2 });
+                                    toggleMenu();
+                                }}
+                                className="transition-all duration-300 cursor-pointer hover:text-white">{section.name}</button>
                         </div>
                     ))}
                 </div>
