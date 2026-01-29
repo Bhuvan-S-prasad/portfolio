@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+body {
+    background: #e5e5e0;
+    color: black;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    font-family: var(--font-amiamie);
+}

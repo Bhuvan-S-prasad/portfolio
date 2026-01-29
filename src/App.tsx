@@ -1,3 +1,4 @@
+import Hero from "./components/Hero"
 import Navbar from "./components/Navbar"
 
 function App() {
@@ -6,6 +7,7 @@ function App() {
     <>
       <div className='relative w-screen min-h-screen overflow-x-auto'>
         <Navbar />
+        <Hero />  
       </div>
     </>
   )
