@@ -7,3 +7,8 @@ body {
     overflow-x: hidden;
     font-family: var(--font-amiamie);
 }
+
+@theme {
+    --color-gold: #cfa355;
+}
+
