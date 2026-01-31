@@ -97,8 +97,8 @@ export const projects = [
         description:
             "This project implements an ensemble of deep learning models (EfficientNet, DenseNet, and ResNet) for detecting and classifying brain tumors from MRI scans. The approach combines the strengths of multiple architectures and incorporates explainable AI techniques to provide interpretable results. Additionally, the system incorporates a RAG (Retrieval-Augmented Generation) module to answer hospital-based queries, including contact details, medical protocols, procedures, and brain tumor awareness information.",
         href: "https://github.com/Bhuvan-S-prasad/BrainScan-org",
-        image: "projects/brainTumor.png",
-        bgImage: "projects/brainTumor.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/brainTumor.png",
+        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/brainTumor.png",
         frameworks: [
             { id: 1, name: "DeepLearning" },
             { id: 2, name: "PyTorch" },
@@ -112,8 +112,8 @@ export const projects = [
         name: "Rivora",
         description: `a modern, full-stack social media application designed to foster meaningful connections through conversations and community-driven interactions. Built with performance and user experience at its core, Rivora allows users to share "Echoes", engage in deep discussions, and form communities known as "Rifts".`,
         href: "https://rivora-psi.vercel.app/",
-        image: "projects/rivora.png",
-        bgImage: "projects/rivora.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rivora.png",
+        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rivora.png",
         frameworks: [
             { id: 1, name: "React" },
             { id: 2, name: "Next.js" },
@@ -127,8 +127,8 @@ export const projects = [
         name: "Rotom",
         description: `Rotom is an AI-powered mockups generator agent that allows users to generate, edit, and publish web prototypes using natural language prompts. Built with Next.js 15, it leverages advanced AI to streamline the design prototyping process.`,
         href: "https://rotom-five.vercel.app/",
-        image: "projects/rotom.png",
-        bgImage: "projects/rotom.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rotom.png",
+        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rotom.png",
         frameworks: [
             { id: 1, name: "React" },
             { id: 2, name: "Next.js" },
@@ -144,8 +144,8 @@ export const projects = [
         name: "Bird Image Classification",
         description: " a sophisticated bird species classification system using CNN ResNet50 architecture. The model can identify various bird species with high accuracy, leveraging transfer learning and fine-tuning techniques.",
         href: "",
-        image: "projects/bird.png",
-        bgImage: "projects/bird.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/bird.png",
+        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/bird.png",
         frameworks: [
             { id: 1, name: "DeepLearning" },
             { id: 2, name: "PyTorch" },
@@ -159,8 +159,8 @@ export const projects = [
         name: "NOMI",
         description: "An ongoing project—an AI-powered web search assistant that synthesizes answers with inline citations, curates personalized content feeds, and delivers real-time insights including news, markets, and weather.",
         href: "",
-        image: "projects/Nomi.png",
-        bgImage: "projects/Nomi.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/Nomi.png",
+        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/Nomi.png",
         frameworks: [
             { id: 1, name: "React" },
             { id: 2, name: "Next.js" },
@@ -176,8 +176,8 @@ export const projects = [
         name: "Human Peripheral Blood Cell Classification",
         description: "A blood cell classification system using ensemble CNN models (DenseNet121, EfficientNet-B0, ResNet50, MobileNetV2) to classify 8 cell types with GradCAM visualizations for explainable AI predictions.",
         href: "",
-        image: "projects/blood.png",
-        bgImage: "projects/blood.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/blood.png",
+        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/blood.png",
         frameworks: [
             { id: 1, name: "Deep Learning" },
             { id: 2, name: "PyTorch" },
@@ -193,26 +193,26 @@ export const projects = [
 export const Artworks = [
     {
         name: "Boa Hancock",
-        image: "artworks/boa.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/artworks/boa.png",
     },
     {
         name: "cilian",
-        image: "artworks/cilian.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/artworks/cilian.png",
     },
     {
         name: "kurapika",
-        image: "artworks/kurapika.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/artworks/kurapika.png",
     },
     {
         name: "naruto",
-        image: "artworks/naruto.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/artworks/naruto.png",
     },
     {
         name: "oni",
-        image: "artworks/oni.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/artworks/oni.png",
     },
     {
         name: "radahn",
-        image: "artworks/radahn.png",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/artworks/radahn.png",
     },
 ]
