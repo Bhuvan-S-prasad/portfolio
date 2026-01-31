@@ -21,6 +21,10 @@ export const Items: NavItem[] = [
         href: "#"
     },
     {
+        name: "Artworks",
+        href: "#"
+    },
+    {
         name: "Contact",
         href: "#"
     },
@@ -134,5 +138,33 @@ export const projects = [
             { id: 6, name: "TailwindCSS" },
             { id: 7, name: "MistralAI" },
         ],
+    },
+]
+
+
+export const Artworks = [
+    {
+        name: "Boa Hancock",
+        image: "artworks/boa.png",
+    },
+    {
+        name: "cilian",
+        image: "artworks/cilian.png",
+    },
+    {
+        name: "kurapika",
+        image: "artworks/kurapika.png",
+    },
+    {
+        name: "naruto",
+        image: "artworks/naruto.png",
+    },
+    {
+        name: "oni",
+        image: "artworks/oni.png",
+    },
+    {
+        name: "radahn",
+        image: "artworks/radahn.png",
     },
 ]

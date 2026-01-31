@@ -1,8 +1,8 @@
 import { useRef } from "react"
 import AnimatedHeader from "./UI/AnimatedHeader"
-import AnimatedTextLine from "./UI/AnimatedTextLine"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
+import TorchEffect from "./UI/TorchEffect"
 
 const About = () => {
     const profileRef = useRef<HTMLImageElement>(null)
@@ -44,13 +44,11 @@ const About = () => {
                 textColor="text-white"
                 withScrollTrigger={true}
             />
-            <div className="flex flex-col items-center justify-between gap-16 px-10 pb-16
-            text-xl font-light tracking-wide lg:flex-row md:text-2xl lg:text-3xl text-white/60
-            ">
-                <img ref={profileRef} src="/bhuvan-port.png" alt="profile image" className="w-md rounded-3xl" />
-                <AnimatedTextLine text="I’m a final-year Computer Science (AI) student focused on deep learning, computer vision, and LLM-based systems. I build practical, explainable AI solutions—ranging from medical imaging models to RAG-powered applications—using PyTorch, with an emphasis on reliability, interpretability, and real-world impact."
-                    className={"w-full"}
-                />
+            <div className="flex flex-col items-center justify-center rounded-b-4xl">
+                {/* <img ref={profileRef} src="/bhuvan-port.png" alt="profile image" className="w-md rounded-3xl" />  */}
+                <div>
+                    <TorchEffect text="I'm a final-year Computer Science (AI) student focused on deep learning, computer vision, and LLM-based systems. I build practical, explainable AI solutions—ranging from medical imaging models to RAG-powered applications—using PyTorch, with an emphasis on reliability, interpretability, and real-world impact." />
+                </div>
 
             </div>
 

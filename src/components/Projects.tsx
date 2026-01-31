@@ -9,6 +9,7 @@ const Projects = () => {
 
     const previewRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<(HTMLDivElement | null)[]>([]);
+    const descriptionRef = useRef<(HTMLDivElement | null)[]>([]);
 
     const [currentIndex, setCurrentIndex] = useState<number | null>(null);
     const moveX = useRef<gsap.QuickToFunc | null>(null);
@@ -25,11 +26,21 @@ const Projects = () => {
             ease: "power3.out"
         });
 
-        // Initialize overlays to hidden state (clipped at bottom)
         overlayRef.current.forEach((el) => {
             if (el) {
                 gsap.set(el, {
                     clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)"
+                });
+            }
+        });
+
+        descriptionRef.current.forEach((el) => {
+            if (el) {
+                gsap.set(el, {
+                    height: 0,
+                    opacity: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0
                 });
             }
         });
@@ -67,6 +78,28 @@ const Projects = () => {
             }
         );
 
+        const descEl = descriptionRef.current[index];
+        if (descEl) {
+            gsap.killTweensOf(descEl);
+            gsap.set(descEl, { height: "auto", opacity: 1, paddingTop: 12, paddingBottom: 12 });
+            const naturalHeight = descEl.offsetHeight;
+            gsap.fromTo(descEl,
+                {
+                    height: 0,
+                    opacity: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0
+                },
+                {
+                    height: naturalHeight,
+                    opacity: 1,
+                    paddingTop: 12,
+                    paddingBottom: 12,
+                    duration: 0.35,
+                    ease: "power2.out"
+                }
+            );
+        }
 
         gsap.to(previewRef.current, {
             opacity: 1,
@@ -97,6 +130,19 @@ const Projects = () => {
             duration: 0.2,
             ease: "power2.out"
         })
+
+        const descEl = descriptionRef.current[index];
+        if (descEl) {
+            gsap.killTweensOf(descEl);
+            gsap.to(descEl, {
+                height: 0,
+                opacity: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
+                duration: 0.25,
+                ease: "power2.in"
+            });
+        }
     }
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -110,7 +156,7 @@ const Projects = () => {
 
     return (
         <section id="projects"
-            className="flex flex-col min-h-screen"
+            className="flex flex-col min-h-screen pb-28"
         >
             <AnimatedHeader
                 title="Projects"
@@ -143,6 +189,15 @@ const Projects = () => {
                         </div>
 
                         <div className="w-full h-0.5 bg-black/80" />
+
+                        <div
+                            ref={(el) => { descriptionRef.current[index] = el }}
+                            className="hidden md:block px-10 overflow-hidden"
+                        >
+                            <p className="text-white text-sm leading-relaxed max-w-3xl">
+                                {project.description}
+                            </p>
+                        </div>
 
                         <div className="flex px-10 text-xs leading-loose uppercase transition-all duration-500 md:text-sm gap-x-5 md:group-hover:px-12">
                             {project.frameworks.map((framework) => (
