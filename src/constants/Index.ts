@@ -139,6 +139,54 @@ export const projects = [
             { id: 7, name: "MistralAI" },
         ],
     },
+    {
+        id: 4,
+        name: "Bird Image Classification",
+        description: " a sophisticated bird species classification system using CNN ResNet50 architecture. The model can identify various bird species with high accuracy, leveraging transfer learning and fine-tuning techniques.",
+        href: "",
+        image: "projects/bird.png",
+        bgImage: "projects/bird.png",
+        frameworks: [
+            { id: 1, name: "DeepLearning" },
+            { id: 2, name: "PyTorch" },
+            { id: 3, name: "ResNet50" },
+            { id: 4, name: "Transfer Learning" },
+            { id: 5, name: "Flask" },
+        ],
+    },
+    {
+        id: 5,
+        name: "NOMI",
+        description: "An ongoing project—an AI-powered web search assistant that synthesizes answers with inline citations, curates personalized content feeds, and delivers real-time insights including news, markets, and weather.",
+        href: "",
+        image: "projects/Nomi.png",
+        bgImage: "projects/Nomi.png",
+        frameworks: [
+            { id: 1, name: "React" },
+            { id: 2, name: "Next.js" },
+            { id: 3, name: "postgresql" },
+            { id: 4, name: "Node.js" },
+            { id: 5, name: "clerk" },
+            { id: 6, name: "TailwindCSS" },
+            { id: 7, name: "Gemini" },
+        ],
+    },
+    {
+        id: 6,
+        name: "Human Peripheral Blood Cell Classification",
+        description: "A blood cell classification system using ensemble CNN models (DenseNet121, EfficientNet-B0, ResNet50, MobileNetV2) to classify 8 cell types with GradCAM visualizations for explainable AI predictions.",
+        href: "",
+        image: "projects/blood.png",
+        bgImage: "projects/blood.png",
+        frameworks: [
+            { id: 1, name: "Deep Learning" },
+            { id: 2, name: "PyTorch" },
+            { id: 3, name: "DenseNet121" },
+            { id: 4, name: "ResNet50" },
+            { id: 5, name: "GradCAM" },
+            { id: 6, name: "Flask" },
+        ],
+    }
 ]
 
 

@@ -156,10 +156,7 @@ const ArtworkPreloader = ({ onRevealComplete }: ArtworkPreloaderProps) => {
                     ))}
                 </div>
 
-                <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-                    <div className="w-px h-8 sm:h-12 bg-black/20" />
-                    <p className="text-[10px] sm:text-xs uppercase tracking-[0.2rem] text-black/30">Scroll</p>
-                </div>
+
             </div>
         </div>
     );
