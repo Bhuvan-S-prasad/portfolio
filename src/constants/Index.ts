@@ -85,3 +85,54 @@ export const focusAreas = [
         ],
     },
 ];
+
+export const projects = [
+    {
+        id: 1,
+        name: "BrainScan AI",
+        description:
+            "This project implements an ensemble of deep learning models (EfficientNet, DenseNet, and ResNet) for detecting and classifying brain tumors from MRI scans. The approach combines the strengths of multiple architectures and incorporates explainable AI techniques to provide interpretable results. Additionally, the system incorporates a RAG (Retrieval-Augmented Generation) module to answer hospital-based queries, including contact details, medical protocols, procedures, and brain tumor awareness information.",
+        href: "https://github.com/Bhuvan-S-prasad/BrainScan-org",
+        image: "projects/brainTumor.png",
+        bgImage: "projects/brainTumor.png",
+        frameworks: [
+            { id: 1, name: "DeepLearning" },
+            { id: 2, name: "PyTorch" },
+            { id: 3, name: "ExplainableAI" },
+            { id: 4, name: "Retreival Augmented Generation" },
+            { id: 5, name: "Flask" },
+        ],
+    },
+    {
+        id: 2,
+        name: "Rivora",
+        description: `a modern, full-stack social media application designed to foster meaningful connections through conversations and community-driven interactions. Built with performance and user experience at its core, Rivora allows users to share "Echoes", engage in deep discussions, and form communities known as "Rifts".`,
+        href: "https://rivora-psi.vercel.app/",
+        image: "projects/rivora.png",
+        bgImage: "projects/rivora.png",
+        frameworks: [
+            { id: 1, name: "React" },
+            { id: 2, name: "Next.js" },
+            { id: 3, name: "MongoDB" },
+            { id: 4, name: "Node.js" },
+            { id: 5, name: "clerk" },
+        ],
+    },
+    {
+        id: 3,
+        name: "Rotom",
+        description: `Rotom is an AI-powered mockups generator agent that allows users to generate, edit, and publish web prototypes using natural language prompts. Built with Next.js 15, it leverages advanced AI to streamline the design prototyping process.`,
+        href: "https://rotom-five.vercel.app/",
+        image: "projects/rotom.png",
+        bgImage: "projects/rotom.png",
+        frameworks: [
+            { id: 1, name: "React" },
+            { id: 2, name: "Next.js" },
+            { id: 3, name: "postgresql" },
+            { id: 4, name: "Node.js" },
+            { id: 5, name: "betterAuth" },
+            { id: 6, name: "TailwindCSS" },
+            { id: 7, name: "MistralAI" },
+        ],
+    },
+]

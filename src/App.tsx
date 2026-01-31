@@ -5,6 +5,7 @@ import FocusArea from "./components/FocusArea"
 import ReactLenis from "lenis/react"
 import Preloader from "./components/UI/Preloader"
 import About from "./components/about"
+import Projects from "./components/Projects"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Summary />
         <FocusArea />
         <About />
+        <Projects />
       </ReactLenis>
     </>
   )
