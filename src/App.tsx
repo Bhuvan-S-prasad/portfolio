@@ -22,9 +22,7 @@ function App() {
         <Projects />
         <Skills />
         <Artworks />
-
         <ContactMe />
-
         <Contact />
       </ReactLenis>
     </>

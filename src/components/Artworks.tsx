@@ -9,7 +9,9 @@ interface Artwork {
 }
 
 const Artworks = () => {
-    const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState(() =>
+        typeof window !== 'undefined' ? window.innerWidth < 768 : false
+    );
 
     useEffect(() => {
         const checkMobile = () => {

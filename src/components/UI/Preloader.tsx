@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
@@ -11,16 +11,22 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLHeadingElement>(null);
     const lenis = useLenis();
+    const lenisRef = useRef(lenis);
+
+    useEffect(() => {
+        lenisRef.current = lenis;
+    }, [lenis]);
 
     useGSAP(() => {
-        lenis?.stop();
+        lenisRef.current?.stop();
 
         const tl = gsap.timeline({
             onComplete: () => {
-                lenis?.start();
+                lenisRef.current?.start();
                 onComplete?.();
             },
         });
+
         tl.from(textRef.current, {
             opacity: 0,
             y: 20,
@@ -43,7 +49,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
             ease: "power3.inOut",
         });
 
-    }, [lenis]);
+    }, []);
 
     return (
         <div
