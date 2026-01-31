@@ -142,7 +142,7 @@ const Contact = () => {
 
                                     className="text-base sm:text-lg md:text-xl text-white/80 hover:text-white transition-colors duration-300 block"
                                 >
-                                    +91 7019119683
+                                    +91-7019119683
                                 </p>
                             </div>
 
