@@ -7,7 +7,7 @@ import Preloader from "./components/UI/Preloader"
 import About from "./components/about"
 import Projects from "./components/Projects"
 import Artworks from "./components/Artworks"
-import ArtworkPreloader from "./components/UI/ArtworkPreloader"
+import ContactMe from "./components/ContactMe"
 
 function App() {
   return (
@@ -21,7 +21,11 @@ function App() {
         <About />
         <Projects />
         <Artworks />
+
+        <ContactMe />
+        
         <section className="h-screen w-full bg-black"></section>
+
         <section className="h-screen w-full bg-black"></section>
       </ReactLenis>
     </>

@@ -177,59 +177,61 @@ const StickyCards: React.FC = () => {
     return (
         <section
             ref={containerRef}
-            className="relative h-screen w-full overflow-hidden bg-black"
+            className="relative h-screen w-full"
         >
-            {Artworks.map((artwork: Artwork, index: number) => (
-                <div
-                    key={artwork.name}
-                    ref={(el) => addToRefs(el, index)}
-                    className="absolute top-1/2 left-1/2 
+            <div className="">
+                {Artworks.map((artwork: Artwork, index: number) => (
+                    <div
+                        key={artwork.name}
+                        ref={(el) => addToRefs(el, index)}
+                        className="absolute top-1/2 left-1/2 
                                w-[28%] max-h-[80vh]
                                flex flex-col
                                will-change-transform
                                rounded-xl overflow-hidden
                                shadow-2xl shadow-black/50"
-                    style={{
-                        background: 'linear-gradient(145deg, rgba(30,30,30,1) 0%, rgba(10,10,10,1) 100%)',
-                    }}
-                >
-                    <div className="absolute inset-0 rounded-xl p-[2px] -z-10"
                         style={{
-                            background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.2) 100%)',
-                        }}
-                    />
-
-                    <div className="w-full overflow-hidden relative">
-                        <img
-                            className="w-full h-auto object-contain"
-                            src={artwork.image}
-                            alt={artwork.name}
-                        />
-
-                        <div className="absolute inset-0 pointer-events-none"
-                            style={{
-                                background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%)',
-                            }}
-                        />
-                    </div>
-
-                    <div className="shrink-0 px-4 py-3 backdrop-blur-sm"
-                        style={{
-                            background: 'linear-gradient(to right, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
-                            borderTop: '1px solid rgba(255,255,255,0.1)',
+                            background: 'linear-gradient(145deg, rgba(30,30,30,1) 0%, rgba(10,10,10,1) 100%)',
                         }}
                     >
-                        <div className="flex items-center justify-between">
-                            <p className="text-white uppercase text-sm tracking-widest font-medium">
-                                {artwork.name}
-                            </p>
-                            <span className="text-white/20 text-lg font-bold">
-                                {String(index + 1).padStart(2, '0')}
-                            </span>
+                        <div className="absolute inset-0 rounded-xl p-[2px] -z-10"
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.2) 100%)',
+                            }}
+                        />
+
+                        <div className="w-full overflow-hidden relative">
+                            <img
+                                className="w-full h-auto object-contain"
+                                src={artwork.image}
+                                alt={artwork.name}
+                            />
+
+                            <div className="absolute inset-0 pointer-events-none"
+                                style={{
+                                    background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%)',
+                                }}
+                            />
+                        </div>
+
+                        <div className="shrink-0 px-4 py-3 backdrop-blur-sm"
+                            style={{
+                                background: 'linear-gradient(to right, rgba(255,255,255,0.08), rgba(255,255,255,0.03))',
+                                borderTop: '1px solid rgba(255,255,255,0.1)',
+                            }}
+                        >
+                            <div className="flex items-center justify-between">
+                                <p className="text-white uppercase text-sm tracking-widest font-medium">
+                                    {artwork.name}
+                                </p>
+                                <span className="text-white/20 text-lg font-bold">
+                                    {String(index + 1).padStart(2, '0')}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </section>
     );
 };

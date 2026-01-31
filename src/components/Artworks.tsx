@@ -55,7 +55,7 @@ const Artworks = () => {
     }
 
     return (
-        <section id="artworks">
+        <section id="artworks" className="bg-black pb-48">
             <ArtworkPreloader />
             <StickyCards />
         </section>
