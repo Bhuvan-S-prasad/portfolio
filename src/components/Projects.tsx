@@ -1,125 +1,244 @@
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { ExternalLink, Github } from 'lucide-react';
+import { ArrowUpRight } from "lucide-react"
+import { projects } from "../constants/Index"
+import AnimatedHeader from "./UI/AnimatedHeader"
+import { useRef, useState } from "react"
+import gsap from "gsap"
+import { useGSAP } from "@gsap/react"
 
-const projects = [
-  {
-    title: 'Advanced brain tumor detection using ensemble of deep learning models with explainable AI visualization',
-    description: 'An ensemble deep learning approach for brain tumor detection and classification using multiple state-of-the-art convolutional neural networks with explainable AI techniques',
-    image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80',
-    github: 'https://github.com/Bhuvan-S-prasad/',
-    live: '#',
-    tags: ['Python', 'CNN', 'XAI', 'Medical Imaging', 'PyTorch']
-  },
-  {
-    title: 'Bird Image Classification',
-    description: 'Developed a sophisticated bird species classification system using CNN ResNet50 architecture. The model can identify various bird species with high accuracy, leveraging transfer learning and fine-tuning techniques.',
-    image: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&q=80',
-    github: 'https://github.com/Bhuvan-S-prasad/Mini_project',
-    live: '#',
-    tags: ['Python', 'pytorch', 'ResNet50', 'CNN', 'Deep Learning']
-  },
-  {
-    title: 'Customer Churn Analysis',
-    description: 'Comprehensive analysis of customer churn using multiple ML models including Logistic Regression, Random Forest, SVM, and Neural Networks. conducted detailed EDA.',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80',
-    github: 'https://github.com/Bhuvan-S-prasad/Customer-Churn-Analysis-and-Model-Comparison',
-    live: '#',
-    tags: ['Python', 'Scikit-Learn', 'EDA', 'Machine Learning', 'Neural Networks', 'Random Forest']
-  },
-  {
-    title: 'Plant Disease Detection',
-    description: 'Created an advanced plant disease detection system using Convolutional Neural Networks. This system helps farmers identify plant diseases early, enabling timely intervention and crop protection.',
-    image: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&q=80',
-    github: 'https://github.com/Bhuvan-S-prasad/Plant-Disease-Detection-AI',
-    live: '#',
-    tags: ['Python', 'CNN', 'OpenCV', 'Deep Learning']
-  },
-  {
-    title: 'Alzheimer\'s Disease Diagnosis prediction',
-    description: 'random forest classifier for Alzheimer\'s Disease Diagnosis prediction using MLops and MLflow',
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80',
-    github: 'https://github.com/Bhuvan-S-prasad/-Alzheimer-Diagnosis', 
-    live: '#',
-    tags: ['Python', 'Random Forest', 'Scikit-Learn',"MLops","MLflow"]
-  },
-  {
-    title: 'sentiment analysis of tweets',
-    description: 'A real-time sentiment analysis platform leveraging deep learning and NLP techniques to classify text into multiple sentiment categories.',
-    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80',
-    github: 'https://github.com/Bhuvan-S-prasad/sentiment-analysis', 
-    live: '#',
-    tags: ['Python', 'distilbert-base-uncased', 'Scikit-Learn',"NLP","pytorch","transformers"]
-  }
-];
+const Projects = () => {
+
+    const previewRef = useRef<HTMLDivElement>(null);
+    const overlayRef = useRef<(HTMLDivElement | null)[]>([]);
+    const descriptionRef = useRef<(HTMLDivElement | null)[]>([]);
+
+    const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+    const moveX = useRef<gsap.QuickToFunc | null>(null);
+    const moveY = useRef<gsap.QuickToFunc | null>(null);
+    const mouse = useRef({ x: 0, y: 0 });
+
+    useGSAP(() => {
+        moveX.current = gsap.quickTo(previewRef.current, "x", {
+            duration: 1.5,
+            ease: "power3.out"
+        });
+        moveY.current = gsap.quickTo(previewRef.current, "y", {
+            duration: 2,
+            ease: "power3.out"
+        });
+
+        overlayRef.current.forEach((el) => {
+            if (el) {
+                gsap.set(el, {
+                    clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)"
+                });
+            }
+        });
+
+        descriptionRef.current.forEach((el) => {
+            if (el) {
+                gsap.set(el, {
+                    height: 0,
+                    opacity: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0
+                });
+            }
+        });
+
+        gsap.from("#project", {
+            y: 100,
+            opacity: 0,
+            delay: 0.5,
+            duration: 1,
+            ease: "back.out",
+            stagger: 0.1,
+            scrollTrigger: {
+                trigger: "#project"
+            }
+        })
+
+    })
+
+    const handleMouseEnter = (index: number) => {
+        if (window.innerWidth < 768) return;
+        setCurrentIndex(index);
+
+        const el = overlayRef.current[index];
+        if (!el) return;
+
+        gsap.killTweensOf(el);
+        gsap.fromTo(el,
+            {
+                clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
+            },
+            {
+                clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+                duration: 0.15,
+                ease: "power2.out"
+            }
+        );
+
+        const descEl = descriptionRef.current[index];
+        if (descEl) {
+            gsap.killTweensOf(descEl);
+            gsap.set(descEl, { height: "auto", opacity: 1, paddingTop: 12, paddingBottom: 12 });
+            const naturalHeight = descEl.offsetHeight;
+            gsap.fromTo(descEl,
+                {
+                    height: 0,
+                    opacity: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0
+                },
+                {
+                    height: naturalHeight,
+                    opacity: 1,
+                    paddingTop: 12,
+                    paddingBottom: 12,
+                    duration: 0.35,
+                    ease: "power2.out"
+                }
+            );
+        }
+
+        gsap.to(previewRef.current, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.3,
+            ease: "power2.out",
+        });
 
 
+    }
 
-export default function Projects() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+    const handleMouseLeave = (index: number) => {
+        if (window.innerWidth < 768) return;
+        setCurrentIndex(null);
+        gsap.to(previewRef.current, {
+            opacity: 0,
+            scale: 0.95,
+            duration: 0.3,
+            ease: "power2.out",
+        })
 
-  return (
-    <section id="projects" className="py-20 bg-black">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+        const el = overlayRef.current[index];
+        if (!el) return;
+
+        gsap.killTweensOf(el);
+        gsap.to(el, {
+            clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
+            duration: 0.2,
+            ease: "power2.out"
+        })
+
+        const descEl = descriptionRef.current[index];
+        if (descEl) {
+            gsap.killTweensOf(descEl);
+            gsap.to(descEl, {
+                height: 0,
+                opacity: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
+                duration: 0.25,
+                ease: "power2.in"
+            });
+        }
+    }
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (window.innerWidth < 768) return;
+        mouse.current.x = e.clientX + 24;
+        mouse.current.y = e.clientY + 24;
+
+        moveX.current?.(mouse.current.x);
+        moveY.current?.(mouse.current.y);
+    }
+
+    return (
+        <section id="projects"
+            className="flex flex-col min-h-screen pb-16 sm:pb-28"
         >
-          <h2 className="text-4xl font-bold text-primary mb-4">Projects</h2>
-          <p className="text-xl text-gray-300">Some of my recent work</p>
-        </motion.div>
+            <AnimatedHeader
+                title="Projects"
+                subTitle="A snapshot of what I've been building."
+                text={`From deep learning and computer vision to explainable AI\n and LLM-powered systems, these projects reflect my approach\n to building practical, reliable, and thoughtfully engineered solutions.`}
+                textColor="text-black"
+            />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="bg-black/50 rounded-xl shadow-lg overflow-hidden border border-primary/20 hover:border-primary/50 transition-all duration-300 flex flex-col h-full"
+            <div className="relative flex flex-col font-light"
+                onMouseMove={(e) => handleMouseMove(e)}
             >
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold text-primary mb-2">{project.title}</h3>
-                <p className="text-gray-300 mb-4 text-justify">{project.description}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map(tag => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                {projects.map((project, index) => (
+                    <a
+                        key={project.id}
+                        id="project"
+                        href={project.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative flex flex-col gap-1 py-4 sm:py-5 cursor-pointer group md:gap-0"
+                        onMouseEnter={() => handleMouseEnter(index)}
+                        onMouseLeave={() => handleMouseLeave(index)}
                     >
-                      {tag}
-                    </span>
-                  ))}
+
+                        <div ref={(el) => { overlayRef.current[index] = el }}
+                            className="absolute inset-0 hidden md:block duration-200 bg-black -z-10 clip-path" />
+
+                        <div className="flex justify-between px-5 sm:px-10 text-black transition-all duration-5000 md:group-hover:px-12 md:group-hover:text-white">
+                            <h2 className="text-xl sm:text-2xl lg:text-[32px] leading-none font-light">
+                                {project.name}
+                            </h2>
+                            <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </div>
+
+                        <div className="w-full h-px sm:h-0.5 bg-black/60 sm:bg-black/80" />
+
+                        <div
+                            ref={(el) => { descriptionRef.current[index] = el }}
+                            className="hidden md:block px-10 overflow-hidden"
+                        >
+                            <p className="text-white text-sm leading-relaxed max-w-3xl">
+                                {project.description}
+                            </p>
+                        </div>
+
+                        <div className="flex flex-wrap px-5 sm:px-10 text-[10px] sm:text-xs md:text-sm leading-loose uppercase transition-all duration-500 gap-x-3 sm:gap-x-5 md:group-hover:px-12">
+                            {project.frameworks.map((framework) => (
+                                <p
+                                    key={framework.id}
+                                    className="text-black/70 sm:text-black transition-colors duration-500 md:group-hover:text-white"
+                                >
+                                    {framework.name}
+                                </p>
+                            ))}
+                        </div>
+
+                        <div className="block md:hidden px-5 sm:px-10 pt-2 pb-3">
+                            <p className="text-xs sm:text-sm text-black/60 leading-relaxed line-clamp-3">
+                                {project.description}
+                            </p>
+                        </div>
+
+                        <div className="relative flex items-center justify-center px-5 sm:px-10 md:hidden">
+                            <div className="w-full aspect-video bg-neutral-100 rounded-lg sm:rounded-xl overflow-hidden">
+                                <img
+                                    src={project.image}
+                                    alt={project.name}
+                                    className="w-full h-full object-contain"
+                                />
+                            </div>
+                        </div>
+                    </a>
+                ))}
+
+
+                <div ref={previewRef} className="fixed -top-2/6 left-0 z-50 overflow-hidden border-8 vorder-black pointer-events-none w-[960px] md:block hidden">
+                    {currentIndex !== null && (
+                        <img src={projects[currentIndex].bgImage} alt={projects[currentIndex].name} className="w-full h-full object-cover" />
+                    )}
                 </div>
-                <div className="flex justify-start mt-auto">
-                  <a
-                    href={project.github}
-                    className="flex items-center text-gray-300 hover:text-primary transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Github className="w-5 h-5 mr-2" />
-                    Code
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+            </div>
+        </section>
+    )
 }
+
+export default Projects

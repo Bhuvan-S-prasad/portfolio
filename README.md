@@ -1,83 +1,73 @@
-# 🚀 Portfolio Website
+# React + TypeScript + Vite
 
-Welcome to my **Portfolio Website**! This project is a personal portfolio built with **React**, **Vite**, and **TypeScript**, designed to showcase my skills, projects, and professional journey.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
----
+Currently, two official plugins are available:
 
-## 🛠️ Tech Stack
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-### Core Technologies
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+## React Compiler
 
-### Styling & Animation
-![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)
-![particles](https://img.shields.io/badge/TSParticles-0055FF?style=for-the-badge&logo=framer&logoColor=white)
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-### Development Tools
-![gitpages](https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=github&logoColor=white)
+## Expanding the ESLint configuration
 
-### Deployment
-![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=github&logoColor=white)
-![npm](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-### version control
-![git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-
-## ✨ Features & Libraries
-
-- 🎨 Responsive and modern UI/UX with Framer Motion animations
-- 🌟 Interactive particle background using TSParticles
-- 📱 Fully responsive design with CSS
-- ✅ Fully typed components and state management
-- 🚀 Lightning-fast builds with Vite
-- 🌐 SEO-friendly with meta tags optimization
-- 🛠️ Easy to update content and extend functionality
-- ⚡ Smooth scroll animations with React Intersection Observer
-- 🎯 Beautiful icons using Lucide React
-- 📧 Contact form integration
-
----
-
-## 🌍 Live Demo
-
-Visit my portfolio: [https://bhuvan-s-prasad.github.io/portfolio/](https://bhuvan-s-prasad.github.io/portfolio/)
-
----
-
-## 📦 Installation & Setup
-
-1. **Clone the repository**:
-   ```
-   git clone https://github.com/your-username/your-repo.git
-   cd your-repo
-   ```
-2. **Install dependencies**:
-
-```
-npm install
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-3. **Run locally**:
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-npm run dev
-```
-
-4. **Build for production**:
-
-```
-npm run build
-```
-5. **changes**:
-   - using this project as template make changes in the component accordingly
-
-## 📧 Contact
-
-Feel free to reach out if you have any questions or suggestions:
-
-- Email: bhuvansprasad20@gmail.com
-- LinkedIn: [linkedin.com/in/bhuvan-s-prasad](https://www.linkedin.com/in/bhuvan-s-prasad/)
