@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import AnimatedTextLine from "./UI/AnimatedTextLine"
+
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import AnimatedHeader from "./UI/AnimatedHeader"
