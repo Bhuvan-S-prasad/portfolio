@@ -62,7 +62,7 @@ const AnimatedHeader = ({
                     <div className="py-12 sm:py-16 text-end">
                         <div className="Uppercase text-2xl md:text-[26px] lg:text-[32px]">
                             <AnimatedTextLine
-                                className="uppercase text-2xl md:text-[18px] lg:text-[28px];"
+                                className="uppercase text-sm md:text-[18px] lg:text-[28px];"
                                 text={text} />
                         </div>
                     </div>

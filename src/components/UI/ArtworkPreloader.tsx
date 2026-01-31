@@ -44,7 +44,7 @@ const ArtworkPreloader = ({ onRevealComplete }: ArtworkPreloaderProps) => {
             .to(subtitleRef.current, {
                 y: 0,
                 opacity: 1,
-                letterSpacing: "0.4rem",
+                letterSpacing: "0.5rem",
                 duration: 0.8,
                 ease: "power3.out"
             })
@@ -123,23 +123,24 @@ const ArtworkPreloader = ({ onRevealComplete }: ArtworkPreloaderProps) => {
                 ref={rightPanelRef}
                 className="absolute inset-y-0 right-0 w-1/2 bg-background z-10"
             />
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center px-6">
+
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center px-5 sm:px-8 md:px-16">
                 <p
                     ref={subtitleRef}
-                    className="text-xs md:text-sm uppercase text-black/60 mb-8"
+                    className="text-[10px] sm:text-xs md:text-sm uppercase text-black/50 tracking-[0.3rem] sm:tracking-[0.4rem] md:tracking-[0.5rem] mb-6 sm:mb-8 md:mb-10"
                 >
                     A creative outlet beyond algorithms
                 </p>
 
                 <h2
                     ref={titleRef}
-                    className="text-5xl md:text-7xl lg:text-9xl font-bold uppercase text-black mb-12 text-center"
+                    className="text-[clamp(2.5rem,10vw,10rem)] font-extralight uppercase text-black tracking-tighter sm:tracking-tight mb-8 sm:mb-12 md:mb-16 text-center leading-[0.9]"
                 >
                     Beyond Code
                 </h2>
 
                 <div
-                    className="flex flex-col items-center gap-2 md:gap-3 text-center"
+                    className="flex flex-col items-center gap-1 sm:gap-2 md:gap-3 text-center max-w-3xl"
                     style={{ perspective: "600px" }}
                 >
                     {textLines.map((line, index) => (
@@ -148,11 +149,16 @@ const ArtworkPreloader = ({ onRevealComplete }: ArtworkPreloaderProps) => {
                             ref={(el) => {
                                 if (el) textLinesRef.current[index] = el;
                             }}
-                            className="text-sm md:text-base lg:text-lg text-black/70 tracking-wide leading-relaxed"
+                            className="text-sm sm:text-base md:text-lg lg:text-xl font-light text-black/60 tracking-wide leading-relaxed"
                         >
                             {line}
                         </p>
                     ))}
+                </div>
+
+                <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+                    <div className="w-px h-8 sm:h-12 bg-black/20" />
+                    <p className="text-[10px] sm:text-xs uppercase tracking-[0.2rem] text-black/30">Scroll</p>
                 </div>
             </div>
         </div>

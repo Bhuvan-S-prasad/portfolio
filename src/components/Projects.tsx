@@ -156,11 +156,11 @@ const Projects = () => {
 
     return (
         <section id="projects"
-            className="flex flex-col min-h-screen pb-28"
+            className="flex flex-col min-h-screen pb-16 sm:pb-28"
         >
             <AnimatedHeader
                 title="Projects"
-                subTitle="A snapshot of what I’ve been building."
+                subTitle="A snapshot of what I've been building."
                 text={`From deep learning and computer vision to explainable AI\n and LLM-powered systems, these projects reflect my approach\n to building practical, reliable, and thoughtfully engineered solutions.`}
                 textColor="text-black"
             />
@@ -169,26 +169,28 @@ const Projects = () => {
                 onMouseMove={(e) => handleMouseMove(e)}
             >
                 {projects.map((project, index) => (
-                    <div
+                    <a
                         key={project.id}
                         id="project"
-                        className="relative flex flex-col gap-1 py-5 cursor-pointer group md:gap-0"
+                        href={project.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative flex flex-col gap-1 py-4 sm:py-5 cursor-pointer group md:gap-0"
                         onMouseEnter={() => handleMouseEnter(index)}
                         onMouseLeave={() => handleMouseLeave(index)}
                     >
 
                         <div ref={(el) => { overlayRef.current[index] = el }}
-
                             className="absolute inset-0 hidden md:block duration-200 bg-black -z-10 clip-path" />
 
-                        <div className="flex justify-between px-10 text-black transition-all duration-5000 md:group-hover:px-12 md:group-hover:text-white">
-                            <h2 className="lg:text-[32px] text-26px leading-none">
+                        <div className="flex justify-between px-5 sm:px-10 text-black transition-all duration-5000 md:group-hover:px-12 md:group-hover:text-white">
+                            <h2 className="text-xl sm:text-2xl lg:text-[32px] leading-none font-light">
                                 {project.name}
                             </h2>
-                            <ArrowUpRight width={24} height={24} className="md:size-6 size-5" />
+                            <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
 
-                        <div className="w-full h-0.5 bg-black/80" />
+                        <div className="w-full h-px sm:h-0.5 bg-black/60 sm:bg-black/80" />
 
                         <div
                             ref={(el) => { descriptionRef.current[index] = el }}
@@ -199,37 +201,42 @@ const Projects = () => {
                             </p>
                         </div>
 
-                        <div className="flex px-10 text-xs leading-loose uppercase transition-all duration-500 md:text-sm gap-x-5 md:group-hover:px-12">
+                        <div className="flex flex-wrap px-5 sm:px-10 text-[10px] sm:text-xs md:text-sm leading-loose uppercase transition-all duration-500 gap-x-3 sm:gap-x-5 md:group-hover:px-12">
                             {project.frameworks.map((framework) => (
                                 <p
                                     key={framework.id}
-                                    className="text-black transition-colors duration-500 md:group-hover:text-white"
+                                    className="text-black/70 sm:text-black transition-colors duration-500 md:group-hover:text-white"
                                 >
                                     {framework.name}
                                 </p>
                             ))}
-
                         </div>
 
-                        <div className="relative flex items-center justify-center px-10 md:hidden h-[400px]">
-                            <img src={project.image} alt={project.name} className="w-full h-full object-cover" />
-
+                        <div className="block md:hidden px-5 sm:px-10 pt-2 pb-3">
+                            <p className="text-xs sm:text-sm text-black/60 leading-relaxed line-clamp-3">
+                                {project.description}
+                            </p>
                         </div>
-                    </div>
+
+                        <div className="relative flex items-center justify-center px-5 sm:px-10 md:hidden">
+                            <div className="w-full aspect-video bg-neutral-100 rounded-lg sm:rounded-xl overflow-hidden">
+                                <img
+                                    src={project.image}
+                                    alt={project.name}
+                                    className="w-full h-full object-contain"
+                                />
+                            </div>
+                        </div>
+                    </a>
                 ))}
 
 
                 <div ref={previewRef} className="fixed -top-2/6 left-0 z-50 overflow-hidden border-8 vorder-black pointer-events-none w-[960px] md:block hidden">
                     {currentIndex !== null && (
                         <img src={projects[currentIndex].bgImage} alt={projects[currentIndex].name} className="w-full h-full object-cover" />
-
                     )}
                 </div>
-
-
             </div>
-
-
         </section>
     )
 }

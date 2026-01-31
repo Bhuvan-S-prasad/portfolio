@@ -4,6 +4,8 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import TorchEffect from "./UI/TorchEffect"
 
+const aboutText = "I'm a final-year Computer Science (AI) student focused on deep learning, computer vision, and LLM-based systems. I build practical, explainable AI solutions—ranging from medical imaging models to RAG-powered applications—using PyTorch, with an emphasis on reliability, interpretability, and real-world impact."
+
 const About = () => {
     const profileRef = useRef<HTMLImageElement>(null)
 
@@ -33,6 +35,7 @@ const About = () => {
         })
 
     })
+
     return (
         <section id="about"
             className="min-h-screen bg-black rounded-b-4xl"
@@ -45,13 +48,16 @@ const About = () => {
                 withScrollTrigger={true}
             />
             <div className="flex flex-col items-center justify-center rounded-b-4xl">
-                {/* <img ref={profileRef} src="/bhuvan-port.png" alt="profile image" className="w-md rounded-3xl" />  */}
-                <div>
-                    <TorchEffect text="I'm a final-year Computer Science (AI) student focused on deep learning, computer vision, and LLM-based systems. I build practical, explainable AI solutions—ranging from medical imaging models to RAG-powered applications—using PyTorch, with an emphasis on reliability, interpretability, and real-world impact." />
+                <div className="block md:hidden px-5 sm:px-8 py-12 sm:py-16">
+                    <p className="text-lg sm:text-xl font-light tracking-wide text-white/90 leading-relaxed text-justify">
+                        {aboutText}
+                    </p>
                 </div>
 
+                <div className="hidden md:block">
+                    <TorchEffect text={aboutText} />
+                </div>
             </div>
-
         </section>
     )
 }

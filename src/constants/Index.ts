@@ -14,19 +14,19 @@ export const Items: NavItem[] = [
     },
     {
         name: "About",
-        href: "#"
+        href: "#about"
     },
     {
         name: "Projects",
-        href: "#"
+        href: "#projects"
     },
     {
         name: "Artworks",
-        href: "#"
+        href: "#artworks"
     },
     {
         name: "Contact",
-        href: "#"
+        href: "#contact"
     },
 ];
 
