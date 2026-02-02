@@ -106,7 +106,7 @@ const Navbar = () => {
                     className="flex flex-col flex-wrap justify-between gap-8 md:flex-row">
                     <div>
                         <p className="tracking-wider text-white/50">E-mail</p>
-                        <p className="text-xl tracking-widest lowercase">bhuvan@gmail.com</p>
+                        <p className="text-xl tracking-widest lowercase">bhuvansbhuvans113@gmail.com</p>
                     </div>
                     <div>
                         <p className="tracking-wider text-white/50">Social Media</p>
@@ -131,7 +131,6 @@ const Navbar = () => {
                 </span>
                 <span ref={bottomLineRef} className="block w-8 h-0.5 bg-white rounded-full origin-center">
                 </span>
-
             </div>
         </>
     )
