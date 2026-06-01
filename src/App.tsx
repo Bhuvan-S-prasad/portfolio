@@ -1,4 +1,3 @@
-import Hero from "./components/Hero"
 import Navbar from "./components/Navbar"
 import Skills from "./components/Skills"
 import FocusArea from "./components/FocusArea"
@@ -9,6 +8,7 @@ import Projects from "./components/Projects"
 import Artworks from "./components/Artworks"
 import ContactMe from "./components/ContactMe"
 import Contact from "./components/Contact"
+import Hero from "./components/Hero"
 
 function App() {
   return (

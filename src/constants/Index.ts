@@ -9,8 +9,8 @@ export const Items: NavItem[] = [
         href: "#home"
     },
     {
-        name: "Focus Areas",
-        href: "#focusArea"
+        name: "Expertise",
+        href: "#expertise"
     },
     {
         name: "About",
@@ -49,43 +49,43 @@ export const Socials: NavItem[] = [
 
 export const focusAreas = [
     {
-        title: "Deep Learning & Medical Imaging",
+        title: "Deep Learning, NLP & Medical AI",
         description:
-            "Designing and deploying deep learning models for image-based diagnosis and classification with a focus on real-world reliability.",
+            "Building intelligent AI systems for medical imaging, natural language processing, and real-world machine learning applications.",
         items: [
-            { title: "Medical Imaging", description: "Brain tumor detection using MRI scans" },
-            { title: "Image Classification", description: "Custom datasets, ResNet & EfficientNet models" },
-            { title: "Model Optimization", description: "Fine-tuning, augmentation, regularization" },
+            { title: "Medical Imaging", description: "Brain tumor detection and analysis using MRI scans" },
+            { title: "Natural Language Processing", description: "Text understanding, summarization, and language modeling" },
+            { title: "Deep Learning", description: "CNNs, Transformers, transfer learning, and model optimization" },
         ],
     },
     {
         title: "Explainable & Trustworthy AI",
         description:
-            "Building interpretable AI systems that provide transparency, confidence, and insight into model decisions.",
+            "Developing transparent AI systems that provide interpretable insights and trustworthy decision-making.",
         items: [
-            { title: "Grad-CAM", description: "Visual explanations for CNN predictions" },
-            { title: "SHAP", description: "Feature-level interpretability and impact analysis" },
-            { title: "Clinical Interpretability", description: "Trust-focused AI for healthcare use cases" },
+            { title: "Explainable AI (XAI)", description: "Building interpretable and accountable AI solutions" },
+            { title: "Grad-CAM", description: "Visual explanations for deep learning predictions" },
+            { title: "SHAP", description: "Feature attribution and model behavior analysis" },
         ],
     },
     {
-        title: "Generative AI & RAG Systems",
+        title: "Generative AI, RAG & Context Engineering",
         description:
-            "Developing LLM-powered applications with retrieval pipelines for accurate, contextual, and grounded responses.",
+            "Creating LLM-powered applications with advanced retrieval systems, contextual grounding, and knowledge integration.",
         items: [
-            { title: "Retrieval-Augmented Generation", description: "Context-aware LLM systems" },
-            { title: "LLM Integration", description: "Hospital & domain-specific chatbots" },
-            { title: "Knowledge Grounding", description: "Reducing hallucinations using RAG" },
+            { title: "Generative AI", description: "LLM-powered applications and AI assistants" },
+            { title: "Retrieval-Augmented Generation", description: "Knowledge-grounded AI systems with reduced hallucinations" },
+            { title: "Context Engineering", description: "Optimizing prompts, memory, and contextual workflows for LLMs" },
         ],
     },
     {
-        title: "Agentic AI & End-to-End ML Systems",
+        title: "Agentic AI & Multi-Agent Systems",
         description:
-            "Engineering intelligent systems that combine models, tools, and workflows into production-ready applications.",
+            "Designing autonomous AI systems that collaborate, reason, and execute complex workflows across multiple tools and agents.",
         items: [
-            { title: "Agentic AI", description: "Autonomous task execution with LLMs" },
-            { title: "Model Serving", description: "Flask-based ML APIs & deployment" },
-            { title: "Experiment Tracking", description: "Metrics logging & reproducibility" },
+            { title: "Agentic AI", description: "Autonomous task planning, execution, and tool usage" },
+            { title: "Multi-Agent Systems", description: "Collaborative AI agents for complex problem solving" },
+            { title: "Workflow Automation", description: "End-to-end intelligent automation and orchestration" },
         ],
     },
 ];
@@ -107,55 +107,27 @@ export const projects = [
             { id: 5, name: "Flask" },
         ],
     },
-    {
-        id: 2,
-        name: "Rivora",
-        description: `a modern, full-stack social media application designed to foster meaningful connections through conversations and community-driven interactions. Built with performance and user experience at its core, Rivora allows users to share "Echoes", engage in deep discussions, and form communities known as "Rifts".`,
-        href: "https://rivora-psi.vercel.app/",
-        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rivora.png",
-        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rivora.png",
-        frameworks: [
-            { id: 1, name: "React" },
-            { id: 2, name: "Next.js" },
-            { id: 3, name: "MongoDB" },
-            { id: 4, name: "Node.js" },
-            { id: 5, name: "clerk" },
-        ],
+   {
+    id: 2,
+    name: "Auto-Mate",
+    description:
+        "An autonomous human-in-the-loop AI assistant that combines Agentic AI, Context Engineering, Retrieval-Augmented Generation (RAG), and multi-agent architectures to automate daily productivity workflows. Built on the ReAct paradigm, Auto-Mate intelligently reasons, retrieves contextual memories, interacts with external tools such as Gmail and Google Calendar, and executes multi-step tasks through specialized agents. The system incorporates long-term episodic and semantic memory using vector embeddings, intelligent task orchestration, approval-based autonomous actions, and conversational interfaces via Telegram, enabling reliable and context-aware personal assistance.",
+    href: "https://github.com/Bhuvan-S-prasad/Auto-Mat",
+    image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/Screenshot%202026-06-01%20104509.png",
+    bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/Screenshot%202026-06-01%20104509.png",
+    frameworks: [
+        { id: 1, name: "Agentic AI" },
+        { id: 2, name: "Generative AI" },
+        { id: 3, name: "Context Engineering" },
+        { id: 4, name: "Multi-Agent Systems" },
+        { id: 5, name: "Retrieval-Augmented Generation" },
+        { id: 6, name: "Vector Databases" },
+        { id: 7, name: "Next.js" },
+        { id: 8, name: "TypeScript" },
+    ],
     },
-    {
+        {
         id: 3,
-        name: "Rotom",
-        description: `Rotom is an AI-powered mockups generator agent that allows users to generate, edit, and publish web prototypes using natural language prompts. Built with Next.js 15, it leverages advanced AI to streamline the design prototyping process.`,
-        href: "https://rotom-five.vercel.app/",
-        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rotom.png",
-        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rotom.png",
-        frameworks: [
-            { id: 1, name: "React" },
-            { id: 2, name: "Next.js" },
-            { id: 3, name: "postgresql" },
-            { id: 4, name: "Node.js" },
-            { id: 5, name: "betterAuth" },
-            { id: 6, name: "TailwindCSS" },
-            { id: 7, name: "MistralAI" },
-        ],
-    },
-    {
-        id: 4,
-        name: "Bird Image Classification",
-        description: " a sophisticated bird species classification system using CNN ResNet50 architecture. The model can identify various bird species with high accuracy, leveraging transfer learning and fine-tuning techniques.",
-        href: "",
-        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/bird.png",
-        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/bird.png",
-        frameworks: [
-            { id: 1, name: "DeepLearning" },
-            { id: 2, name: "PyTorch" },
-            { id: 3, name: "ResNet50" },
-            { id: 4, name: "Transfer Learning" },
-            { id: 5, name: "Flask" },
-        ],
-    },
-    {
-        id: 5,
         name: "NOMI",
         description: "An ongoing project—an AI-powered web search assistant that synthesizes answers with inline citations, curates personalized content feeds, and delivers real-time insights including news, markets, and weather.",
         href: "",
@@ -172,7 +144,54 @@ export const projects = [
         ],
     },
     {
+        id: 4,
+        name: "Rivora",
+        description: `a modern, full-stack social media application designed to foster meaningful connections through conversations and community-driven interactions. Built with performance and user experience at its core, Rivora allows users to share "Echoes", engage in deep discussions, and form communities known as "Rifts".`,
+        href: "https://rivora-psi.vercel.app/",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rivora.png",
+        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rivora.png",
+        frameworks: [
+            { id: 1, name: "React" },
+            { id: 2, name: "Next.js" },
+            { id: 3, name: "MongoDB" },
+            { id: 4, name: "Node.js" },
+            { id: 5, name: "clerk" },
+        ],
+    },
+    {
+        id: 5,
+        name: "Rotom",
+        description: `Rotom is an AI-powered mockups generator agent that allows users to generate, edit, and publish web prototypes using natural language prompts. Built with Next.js 15, it leverages advanced AI to streamline the design prototyping process.`,
+        href: "https://rotom-five.vercel.app/",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rotom.png",
+        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/rotom.png",
+        frameworks: [
+            { id: 1, name: "React" },
+            { id: 2, name: "Next.js" },
+            { id: 3, name: "postgresql" },
+            { id: 4, name: "Node.js" },
+            { id: 5, name: "betterAuth" },
+            { id: 6, name: "TailwindCSS" },
+            { id: 7, name: "MistralAI" },
+        ],
+    },
+    {
         id: 6,
+        name: "Bird Image Classification",
+        description: " a sophisticated bird species classification system using CNN ResNet50 architecture. The model can identify various bird species with high accuracy, leveraging transfer learning and fine-tuning techniques.",
+        href: "",
+        image: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/bird.png",
+        bgImage: "https://ik.imagekit.io/wq68aygdr/portfolio/projects/bird.png",
+        frameworks: [
+            { id: 1, name: "DeepLearning" },
+            { id: 2, name: "PyTorch" },
+            { id: 3, name: "ResNet50" },
+            { id: 4, name: "Transfer Learning" },
+            { id: 5, name: "Flask" },
+        ],
+    },
+    {
+        id: 7,
         name: "Human Peripheral Blood Cell Classification",
         description: "A blood cell classification system using ensemble CNN models (DenseNet121, EfficientNet-B0, ResNet50, MobileNetV2) to classify 8 cell types with GradCAM visualizations for explainable AI predictions.",
         href: "",
