@@ -1,18 +1,13 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
-import { Items, Socials } from "../constants/Index";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { useLenis } from "lenis/react";
+import { navItems } from "../content/navigation";
+import { profile, socials } from "../content/profile";
+import { gsap, useGSAP } from "../lib/motion";
+import { grainLayer } from "../lib/grain";
+import { measurePage, type PageMap as PageMapData } from "../lib/pageMap";
+import PageMap from "./nav/PageMap";
 
-/* ── types ─────────────────────────────────────────── */
-interface NavItem  { name: string; href: string; }
-interface Social   { name: string; href: string; }
-
-/* ── grain (same as Artworks section for cohesion) ── */
-const GRAIN =
-    "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='ng'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ng)' opacity='0.07'/%3E%3C/svg%3E\")";
+const NAV_IDS = navItems.map((item) => item.href.replace(/^#/, ""));
 
 const Navbar = () => {
     /* ── refs ── */
@@ -24,6 +19,7 @@ const Navbar = () => {
     const metaRef     = useRef<HTMLDivElement>(null);
     const tlRef       = useRef<gsap.core.Timeline | null>(null);
 
+    const toggleBtnRef = useRef<HTMLButtonElement>(null);
     const topLineRef = useRef<HTMLSpanElement>(null);
     const botLineRef = useRef<HTMLSpanElement>(null);
 
@@ -31,6 +27,10 @@ const Navbar = () => {
     const [isOpen, setIsOpen]           = useState(false);
     const [showBtn, setShowBtn]         = useState(true);
     const [time, setTime]               = useState("");
+    const [preview, setPreview]         = useState(0);
+    const [pageMap, setPageMap]         = useState<PageMapData | null>(null);
+    // The section the reader is in when the menu opens; its link gets focus.
+    const hereRef = useRef(0);
 
     const lenis = useLenis();
 
@@ -96,11 +96,6 @@ const Navbar = () => {
             /* 4 — bottom meta info fades in */
             .to(meta, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.58);
 
-        /* icon lines → X */
-        gsap.timeline({ paused: true })
-            .to(topLineRef.current, { rotate: 45,  y:  3.5, duration: 0.3, ease: "power2.inOut" })
-            .to(botLineRef.current, { rotate: -45, y: -3.5, duration: 0.3, ease: "power2.inOut" }, "<");
-
     }, []);
 
     /* ── toggle ── */
@@ -116,17 +111,73 @@ const Navbar = () => {
         if (isOpen) {
             tlRef.current?.reverse();
             iconTLRef.current?.reverse();
+            lenis?.start();
         } else {
+            // Snapshot the page for the map, and start the caption where the reader is.
+            const map = measurePage(NAV_IDS);
+            const mid = map.view.top + map.view.height / 2;
+            const here = map.segments.find((seg) => seg.nav !== null && mid >= seg.top && mid < seg.top + seg.height)
+                ?? [...map.segments].reverse().find((seg) => seg.nav !== null && seg.top <= mid);
+            hereRef.current = here?.nav ?? 0;
+            setPageMap(map);
+            setPreview(hereRef.current);
             tlRef.current?.play();
             iconTLRef.current?.play();
+            lenis?.stop();
         }
         setIsOpen(p => !p);
     };
 
     const handleNavClick = (href: string) => {
-        lenis?.scrollTo(href, { duration: 2 });
+        // Close first: a stopped Lenis ignores scrollTo.
         toggle();
+        lenis?.scrollTo(href, { duration: 2 });
     };
+
+    /* ── keyboard: Esc closes, Tab stays inside the open menu ── */
+    const toggleRef = useRef(toggle);
+    useEffect(() => {
+        toggleRef.current = toggle;
+    });
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        // Focus the link for where the reader is, so the map caption starts there too.
+        const links = overlayRef.current?.querySelectorAll<HTMLElement>('nav[aria-label="Main navigation"] button');
+        const current = links?.[hereRef.current] ?? links?.[0];
+        const focusTimer = window.setTimeout(() => current?.focus({ preventScroll: true }), 400);
+
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                toggleRef.current();
+                toggleBtnRef.current?.focus();
+                return;
+            }
+            if (e.key !== "Tab") return;
+
+            const focusables = [
+                ...(overlayRef.current?.querySelectorAll<HTMLElement>("button, a") ?? []),
+                toggleBtnRef.current,
+            ].filter(Boolean) as HTMLElement[];
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        };
+
+        window.addEventListener("keydown", onKeyDown);
+        return () => {
+            window.clearTimeout(focusTimer);
+            window.removeEventListener("keydown", onKeyDown);
+        };
+    }, [isOpen]);
 
     /* ── render ── */
     return (
@@ -149,12 +200,7 @@ const Navbar = () => {
                         height: "50%", background: "#080808", overflow: "hidden",
                     }}
                 >
-                    <div aria-hidden style={{
-                        position: "absolute", inset: 0,
-                        backgroundImage: GRAIN, backgroundSize: "256px 256px",
-                        opacity: 0.6, pointerEvents: "none",
-                        animation: "navGrain 0.13s steps(1) infinite",
-                    }} />
+                    <div aria-hidden style={grainLayer(0.6)} />
 
                 </div>
 
@@ -166,12 +212,7 @@ const Navbar = () => {
                         height: "50%", background: "#080808", overflow: "hidden",
                     }}
                 >
-                    <div aria-hidden style={{
-                        position: "absolute", inset: 0,
-                        backgroundImage: GRAIN, backgroundSize: "256px 256px",
-                        opacity: 0.6, pointerEvents: "none",
-                        animation: "navGrain 0.13s steps(1) infinite",
-                    }} />
+                    <div aria-hidden style={grainLayer(0.6)} />
                 </div>
 
                 {/* ── Content layer (sits above both panels) ── */}
@@ -192,15 +233,14 @@ const Navbar = () => {
                         display: "flex", justifyContent: "space-between", alignItems: "flex-end",
                     }}>
                         <span style={{
-                            color: "rgba(255,255,255,0.28)", fontSize: 10,
-                            letterSpacing: "0.42em", textTransform: "uppercase",
-                            fontFamily: "inherit",
+                            color: "rgba(255,255,255,0.35)", fontSize: 11,
+                            textTransform: "uppercase", fontFamily: "var(--font-mono)", letterSpacing: "0.14em",
                         }}>
                             Portfolio — Navigation
                         </span>
                         <span style={{
-                            color: "rgba(255,255,255,0.28)", fontSize: 10,
-                            letterSpacing: "0.35em", fontVariantNumeric: "tabular-nums",
+                            color: "rgba(255,255,255,0.35)", fontSize: 11,
+                            fontVariantNumeric: "tabular-nums", fontFamily: "var(--font-mono)", letterSpacing: "0.14em",
                         }}>
                             {time}
                         </span>
@@ -208,6 +248,7 @@ const Navbar = () => {
 
                     {/* nav links — centered vertically with generous padding */}
                     <div style={{
+                        position: "relative",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
@@ -220,7 +261,7 @@ const Navbar = () => {
                                 display: "flex", flexDirection: "column",
                                 gap: "0.5vh",
                             }}>
-                                {(Items as NavItem[]).map((item, i) => (
+                                {navItems.map((item, i) => (
                                     <li
                                         key={item.name}
                                         ref={el => { linksRef.current[i] = el; }}
@@ -228,6 +269,9 @@ const Navbar = () => {
                                     >
                                         <button
                                             onClick={() => handleNavClick(item.href)}
+                                            onMouseEnter={() => setPreview(i)}
+                                            onFocus={() => setPreview(i)}
+                                            data-cursor="go to"
                                             style={{
                                                 display: "flex",
                                                 alignItems: "baseline",
@@ -243,7 +287,8 @@ const Navbar = () => {
                                             <span style={{
                                                 color: "#cfa355",
                                                 fontSize: "clamp(10px, 1vw, 13px)",
-                                                letterSpacing: "0.3em",
+                                                fontFamily: "var(--font-mono)",
+                                                letterSpacing: "0.1em",
                                                 fontVariantNumeric: "tabular-nums",
                                                 marginBottom: "0.15em",
                                                 flexShrink: 0,
@@ -253,8 +298,8 @@ const Navbar = () => {
                                             {/* name */}
                                             <span style={{
                                                 color: "rgba(255,255,255,0.45)",
-                                                fontSize: "clamp(2rem, 6.8vh, 6.2rem)",
-                                                fontWeight: 500,
+                                                fontSize: "clamp(1.75rem, 5.6vh, 5.4rem)",
+                                                fontWeight: 300,
                                                 letterSpacing: "-0.02em",
                                                 textTransform: "uppercase",
                                                 lineHeight: 1.05,
@@ -269,6 +314,9 @@ const Navbar = () => {
                                 ))}
                             </ul>
                         </nav>
+
+                        {/* true-to-scale map of the page, with where you are */}
+                        <PageMap map={pageMap} open={isOpen} active={preview} onHover={setPreview} onGo={handleNavClick} />
                     </div>
 
                     {/* bottom meta row */}
@@ -282,14 +330,15 @@ const Navbar = () => {
                         {/* email */}
                         <div>
                             <p style={{
-                                color: "rgba(255,255,255,0.3)", fontSize: 9,
-                                letterSpacing: "0.42em", textTransform: "uppercase",
-                                margin: "0 0 5px",
+                                color: "rgba(255,255,255,0.35)", fontSize: 10,
+                                textTransform: "uppercase", fontFamily: "var(--font-mono)", letterSpacing: "0.14em",
+                                margin: "0 0 6px",
                             }}>
                                 E-mail
                             </p>
                             <a
-                                href="mailto:bhuvansbhuvans113@gmail.com"
+                                href={`mailto:${profile.email}`}
+                                data-cursor="email"
                                 style={{
                                     color: "rgba(255,255,255,0.65)", fontSize: 13,
                                     letterSpacing: "0.18em", textDecoration: "none",
@@ -297,24 +346,25 @@ const Navbar = () => {
                                 }}
                                 className="nav-meta-link"
                             >
-                                bhuvansbhuvans113@gmail.com
+                                {profile.email}
                             </a>
                         </div>
 
                         {/* socials */}
                         <div style={{ textAlign: "right" }}>
                             <p style={{
-                                color: "rgba(255,255,255,0.3)", fontSize: 9,
-                                letterSpacing: "0.42em", textTransform: "uppercase",
-                                margin: "0 0 5px",
+                                color: "rgba(255,255,255,0.35)", fontSize: 10,
+                                textTransform: "uppercase", fontFamily: "var(--font-mono)", letterSpacing: "0.14em",
+                                margin: "0 0 6px",
                             }}>
                                 Social
                             </p>
                             <div style={{ display: "flex", gap: 20, justifyContent: "flex-end" }}>
-                                {(Socials as Social[]).map((s, i) => (
+                                {socials.map((s, i) => (
                                     <a
                                         key={i} href={s.href}
                                         target="_blank" rel="noopener noreferrer"
+                                        data-cursor={s.name.toLowerCase()}
                                         style={{
                                             color: "rgba(255,255,255,0.55)", fontSize: 10,
                                             letterSpacing: "0.35em", textTransform: "uppercase",
@@ -333,7 +383,9 @@ const Navbar = () => {
 
 
             <button
+                ref={toggleBtnRef}
                 onClick={toggle}
+                data-cursor={isOpen ? "close" : "menu"}
                 aria-label={isOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isOpen}
                 style={{

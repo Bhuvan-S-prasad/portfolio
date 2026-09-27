@@ -1,11 +1,7 @@
 import { useRef } from "react"
-import { focusAreas } from "../constants/Index"
+import { focusAreas } from "../content/expertise"
 import AnimatedHeader from "./UI/AnimatedHeader"
-import gsap from "gsap"
-import { useGSAP } from "@gsap/react"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-
-gsap.registerPlugin(ScrollTrigger)
+import { gsap, useGSAP } from "../lib/motion"
 
 const FocusArea = () => {
     const rowRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -103,11 +99,11 @@ const FocusArea = () => {
     }, [])
 
     return (
-        <section id="expertise" className="min-h-screen bg-black rounded-t-4xl">
+        <section id="expertise" className="min-h-screen">
             <AnimatedHeader
                 title="Expertise"
                 subTitle="What drives my work"
-                text={"My work spans deep learning, explainable AI, and LLM-powered applications —built with a focus on reliability, interpretability, and real-world impact."}
+                text={"My work spans efficiency-focused AI tooling,\nagentic systems, LLM-powered applications\nand explainable deep learning — built for\nreliability and real-world impact."}
                 textColor="text-white"
                 withScrollTrigger={true}
             />
@@ -135,9 +131,9 @@ const FocusArea = () => {
                             </span>
 
                             {/* Area title */}
-                            <h2 className="area-title text-2xl sm:text-3xl lg:text-4xl font-light text-white leading-tight tracking-tight">
+                            <h3 className="area-title text-2xl sm:text-3xl lg:text-4xl font-light text-white leading-tight tracking-tight">
                                 {area.title}
-                            </h2>
+                            </h3>
 
                             {/* Description + sub-item tags */}
                             <div className="flex flex-col gap-5 md:gap-6">

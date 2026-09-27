@@ -1,9 +1,5 @@
 import { useEffect, useRef } from "react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { SplitText } from "gsap/SplitText"
-
-gsap.registerPlugin(ScrollTrigger, SplitText)
+import { gsap, SplitText } from "../../lib/motion"
 
 interface AnimatedHeaderProps {
     title: string;
@@ -11,6 +7,10 @@ interface AnimatedHeaderProps {
     text: string;
     textColor: string;
     withScrollTrigger?: boolean;
+    /** Only the hero should render an h1. */
+    as?: "h1" | "h2";
+    /** When false the intro waits (e.g. behind the preloader) until it turns true. */
+    play?: boolean;
 }
 
 interface SplitResult {
@@ -23,13 +23,18 @@ const AnimatedHeader = ({
     subTitle,
     text,
     textColor,
-    withScrollTrigger = false
+    withScrollTrigger = false,
+    as: Title = "h2",
+    play = true,
 }: AnimatedHeaderProps) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const subtitleRef = useRef<HTMLParagraphElement>(null)
     const titleRef = useRef<HTMLHeadingElement>(null)
     const lineRef = useRef<HTMLDivElement>(null)
     const descRef = useRef<HTMLDivElement>(null)
+    const tlRef = useRef<gsap.core.Timeline | null>(null)
+    // Initial value only: later changes are handled by the play effect below.
+    const playRef = useRef(play)
 
     const lines = text.split("\n").filter((line) => line.trim() !== "")
 
@@ -64,6 +69,7 @@ const AnimatedHeader = ({
 
             // Choreographed timeline — flows top to bottom matching layout
             const tl = gsap.timeline({
+                paused: !withScrollTrigger && !playRef.current,
                 scrollTrigger: withScrollTrigger ? {
                     trigger: containerRef.current,
                     start: "top 78%",
@@ -104,10 +110,16 @@ const AnimatedHeader = ({
                     ease: "power2.out",
                 }, "-=0.3")
             }
+
+            tlRef.current = tl
         }, containerRef)
 
         return () => ctx.revert()
     }, [withScrollTrigger])
+
+    useEffect(() => {
+        if (play) tlRef.current?.play()
+    }, [play])
 
     const isDark = textColor.includes("white")
 
@@ -116,7 +128,7 @@ const AnimatedHeader = ({
 
             {/* ── Title — massive, full-width, the hero moment ── */}
             <div className="px-6 sm:px-10 pb-8 sm:pb-12">
-                <h1
+                <Title
                     ref={titleRef}
                     className={`uppercase ${textColor}
                         text-[42px] sm:text-[80px] md:text-[100px] lg:text-[130px] xl:text-[152px]
@@ -124,7 +136,7 @@ const AnimatedHeader = ({
                         font-extralight tracking-[-0.02em]`}
                 >
                     {title}
-                </h1>
+                </Title>
             </div>
 
             {/* ── Animated divider — draws left to right ── */}

@@ -1,36 +1,30 @@
-import { useRef } from "react"
+import { lazy, Suspense } from "react"
+import SectionHeader from "./UI/SectionHeader"
+import { profile } from "../content/profile"
 
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
-import AnimatedHeader from "./UI/AnimatedHeader"
+// Loaded as its own chunk after the preloader, so it never delays first paint.
+const FlowField = lazy(() => import("./UI/FlowField"))
 
-const Hero = () => {
-    const contextRef = useRef<HTMLDivElement>(null)
-    const headerRef = useRef<HTMLDivElement>(null)
-
-    useGSAP(() => {
-        const tl = gsap.timeline()
-        tl.from(contextRef.current, {
-            y: "50vh",
-            duration: 1,
-            ease: "circ.out",
-        });
-        tl.from(headerRef.current, {
-            opacity: 0,
-            y: "200",
-            duration: 1,
-            ease: "circ.out",
-        }, "<+0.2");
-    }, []);
+const Hero = ({ ready }: { ready: boolean }) => {
     return (
-        <section id="home" className="flex flex-col justify-end min-h-screen">
-            <AnimatedHeader
-                title="Bhuvan S"
-                subTitle="THOUGHTFUL SYSTEMS, CLEAN EXECUTION"
-                text={`A passionate Computer Science and Artificial Intelligence\nstudent with a knack for solving complex\nproblems using technology`}
-                textColor="text-black"
-            />
-
+        <section id="home" className="relative flex flex-col justify-end min-h-screen">
+            {ready && (
+                <Suspense fallback={null}>
+                    <div className="absolute inset-0 animate-[fadeIn_1.6s_ease-out_both]">
+                        <FlowField />
+                    </div>
+                </Suspense>
+            )}
+            <div className="relative">
+                <SectionHeader
+                    as="h1"
+                    title={profile.shortName}
+                    label={`${profile.role} · ${profile.industry}`}
+                    text={profile.tagline}
+                    withScrollTrigger={false}
+                    play={ready}
+                />
+            </div>
         </section>
     )
 }

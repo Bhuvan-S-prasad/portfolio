@@ -13,6 +13,9 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
     "@gsap/react": "^2.1.2",
     "@tailwindcss/vite": "^4.1.18",
     "gh-pages": "^6.3.0",
@@ -21,8 +24,6 @@
     "lucide-react": "^0.563.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-responsive": "^10.0.1",
-    "react-scroll": "^1.9.3",
     "tailwindcss": "^4.1.18",
     "three": "^0.184.0"
   },
@@ -31,7 +32,6 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "@types/react-scroll": "^1.8.10",
     "@types/three": "^0.184.0",
     "@vitejs/plugin-react": "^5.1.1",
     "eslint": "^9.39.1",

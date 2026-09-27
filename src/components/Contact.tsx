@@ -1,10 +1,6 @@
 import { useRef } from 'react'
-import { Socials } from '../constants/Index'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
+import { profile, socials } from '../content/profile'
+import { gsap, useGSAP } from '../lib/motion'
 
 const Contact = () => {
     const sectionRef = useRef<HTMLElement>(null)
@@ -16,7 +12,7 @@ const Contact = () => {
     const detailsRef = useRef<HTMLDivElement>(null)
     const socialsRef = useRef<HTMLDivElement>(null)
 
-    const filteredSocials = Socials.filter(
+    const filteredSocials = socials.filter(
         (social) => social.name === 'Github' || social.name === 'Linkedin'
     )
 
@@ -93,7 +89,7 @@ const Contact = () => {
     }
 
     return (
-        <section ref={sectionRef} id="contact" className="min-h-screen w-full bg-black py-12 sm:py-20 lg:py-32 overflow-hidden">
+        <section ref={sectionRef} id="contact" className="min-h-screen w-full bg-black rounded-t-4xl py-12 sm:py-20 lg:py-32 overflow-hidden">
             <div className="px-5 sm:px-8 md:px-16 lg:px-24">
                 <div ref={headerRef} className="mb-8">
                     <p className="text-xs sm:text-sm tracking-[0.3rem] sm:tracking-[0.5rem] uppercase text-white/50">Get in Touch</p>
@@ -121,14 +117,15 @@ const Contact = () => {
                         <p className="text-xs sm:text-sm tracking-[0.2rem] sm:tracking-[0.3rem] uppercase text-white/40 mb-3 sm:mb-4">Say Hello</p>
                         <a
                             ref={emailRef}
-                            href="mailto:bhuvansbhuvans113@gmail.com"
+                            href={`mailto:${profile.email}`}
+                            data-cursor="say hello"
                             onMouseMove={handleEmailHover}
                             onMouseLeave={handleEmailLeave}
                             className="group inline-block text-lg sm:text-2xl md:text-3xl lg:text-4xl text-white lowercase tracking-wide 
                                        transition-colors duration-300 hover:text-white/70 relative break-all sm:break-normal"
                         >
                             <span className="relative">
-                                bhuvansbhuvans113@gmail.com
+                                {profile.email}
                                 <span className="absolute bottom-0 left-0 w-0 h-px bg-white transition-all duration-500 group-hover:w-full" />
                             </span>
                         </a>
@@ -136,19 +133,14 @@ const Contact = () => {
 
                     <div className="flex flex-col gap-8 sm:gap-12 lg:gap-16">
                         <div ref={detailsRef} className="grid grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
-                            <div className="group">
-                                <p className="text-[10px] sm:text-xs tracking-[0.15rem] sm:tracking-[0.2rem] uppercase text-white/40 mb-2 sm:mb-3">Phone</p>
-                                <p
-
-                                    className="text-base sm:text-lg md:text-xl text-white/80 hover:text-white transition-colors duration-300 block"
-                                >
-                                    +91-7019119683
-                                </p>
+                            <div>
+                                <p className="text-[10px] sm:text-xs tracking-[0.15rem] sm:tracking-[0.2rem] uppercase text-white/40 mb-2 sm:mb-3">Role</p>
+                                <p className="text-base sm:text-lg md:text-xl text-white/80">{profile.role}</p>
                             </div>
 
                             <div>
                                 <p className="text-[10px] sm:text-xs tracking-[0.15rem] sm:tracking-[0.2rem] uppercase text-white/40 mb-2 sm:mb-3">Location</p>
-                                <p className="text-base sm:text-lg md:text-xl text-white/80">India</p>
+                                <p className="text-base sm:text-lg md:text-xl text-white/80">{profile.location}</p>
                             </div>
                         </div>
 
@@ -161,6 +153,7 @@ const Contact = () => {
                                         href={social.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        data-cursor={social.name.toLowerCase()}
                                         className="group relative text-base sm:text-lg uppercase tracking-wider sm:tracking-widest text-white/70 hover:text-white transition-colors duration-300"
                                     >
                                         {social.name}
@@ -174,7 +167,7 @@ const Contact = () => {
 
                 <div className="mt-16 sm:mt-24 lg:mt-32 pt-6 sm:pt-8 border-t border-white/10">
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-center sm:text-left">
-                        <p className="text-xs sm:text-sm text-white/30 tracking-wide">2026 Bhuvan S Prasad</p>
+                        <p className="text-xs sm:text-sm text-white/30 tracking-wide">© {new Date().getFullYear()} {profile.name}</p>
                         <p className="text-xs sm:text-sm text-white/30 tracking-wide">Developed with passion</p>
                     </div>
                 </div>

@@ -1,17 +1,103 @@
 @import "tailwindcss";
-
-body {
-    background: #e5e5e0;
-    color: black;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-    font-family: var(--font-amiamie);
-}
+@import "lenis/dist/lenis.css";
 
 @theme {
-    --color-gold: #cfa355;
+    /* Palette */
+    --color-bone: #e5e5e0;
     --color-background: #e5e5e0;
+    --color-ink: #080808;
+    --color-gold: #cfa355;
+    --color-ember: #c8553d;
+
+    /* Type — sans for everything, serif italic for accents, mono for labels */
+    --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+    --font-mono: "Geist Mono Variable", ui-monospace, "SFMono-Regular", monospace;
 }
+
+:root {
+    /* Attention / bottleneck heat: bone → gold → ember */
+    --heat-gradient: linear-gradient(90deg, var(--color-bone), var(--color-gold) 55%, var(--color-ember));
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    background: var(--color-bone);
+    color: black;
+    overflow-x: hidden;
+    font-family: var(--font-sans);
+}
+
+::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+}
+
+/* The custom cursor (components/UI/Cursor) replaces the native one when mounted. */
+html.has-cursor,
+html.has-cursor * {
+    cursor: none !important;
+}
+
+:focus-visible {
+    outline: 1px solid var(--color-gold);
+    outline-offset: 4px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Projects stage: frames fade out softly as they slide behind the index. */
+@media (min-width: 768px) {
+    .stage-mask {
+        -webkit-mask-image: linear-gradient(to right, transparent 0, black 2vw);
+        mask-image: linear-gradient(to right, transparent 0, black 2vw);
+    }
+}
+
+/* Artworks model view: the scan line that sweeps the drawing (height in --scan). */
+@keyframes scanDown {
+    0%   { transform: translateY(0); opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(var(--scan)); opacity: 0; }
+}
+@keyframes scanUp {
+    0%   { transform: translateY(var(--scan)); opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(0); opacity: 0; }
+}
+
+/* Draws an SVG path with pathLength="1" from start to end. */
+@keyframes drawLine {
+    from { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    to   { stroke-dasharray: 1; stroke-dashoffset: 0; }
+}
+
+/* A small horizontal "go this way" hint. */
+@keyframes nudge {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(5px); }
+}
+
+/* TraceLog lines typed in one after another once `.is-on` is set. */
+.trace-reveal [data-trace-line] {
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.trace-reveal.is-on [data-trace-line] {
+    opacity: 1;
+    transform: none;
+}
+.trace-reveal.is-on [data-trace-line]:nth-child(2) { transition-delay: 0.35s; }
+.trace-reveal.is-on [data-trace-line]:nth-child(3) { transition-delay: 0.7s; }
 
 /* ── Navbar custom styles ── */
 @keyframes navGrain {
@@ -22,7 +108,8 @@ body {
     100% { background-position: 0 0; }
 }
 
-.nav-link-btn:hover .nav-link-text {
+.nav-link-btn:hover .nav-link-text,
+.nav-link-btn:focus-visible .nav-link-text {
     color: rgba(255,255,255,1) !important;
     letter-spacing: 0em !important;
 }
@@ -37,7 +124,15 @@ body {
 
 @media (max-width: 767px) {
     .nav-link-btn span:last-child {
-        font-size: clamp(2.4rem, 14vw, 4rem) !important;
+        font-size: clamp(2.4rem, 12vw, 4rem) !important;
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -1,22 +1,36 @@
-"use client";
+import { useState, useEffect, useRef } from "react";
+import { artworks as artworkData, type Artwork } from "../content/artworks";
+import { ScrollTrigger } from "../lib/motion";
+import { grainLayer } from "../lib/grain";
+import ModelLayer, { ModelFilterDefs } from "./artworks/ModelLayer";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { Artworks as ArtworkData } from "../constants/Index";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+/* ─── Human / model view switch ─── */
+const ViewToggle = ({ on, onChange }: { on: boolean; onChange: (on: boolean) => void }) => (
+    <div
+        role="group"
+        aria-label="Artwork view"
+        className="flex items-center gap-1 rounded-full border border-white/15 bg-black/40 p-1 font-mono text-[10px] uppercase tracking-[0.12em] backdrop-blur-sm"
+    >
+        {([["Human view", false], ["Model view", true]] as const).map(([label, value]) => (
+            <button
+                key={label}
+                type="button"
+                aria-pressed={on === value}
+                onClick={() => onChange(value)}
+                data-cursor={value ? "see what a model sees" : "back to the drawing"}
+                className={`rounded-full px-3 py-1.5 transition-colors duration-300
+                    ${on === value ? (value ? "bg-gold text-ink" : "bg-white text-ink") : "text-white/55 hover:text-white"}`}
+            >
+                {label}
+            </button>
+        ))}
+    </div>
+);
 
-gsap.registerPlugin(ScrollTrigger);
-
-interface Artwork {
-    name: string;
-    image: string;
-}
+const MODEL_NOTE = "Edge filter + hand-labelled regions — how a vision model might parse the drawing. Illustrative.";
 
 const clamp = (v: number, min: number, max: number) =>
     Math.min(Math.max(v, min), max);
-
-const GRAIN =
-    "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E\")";
 
 /* ──────────────────────────────────────────────────────────────────────────
    DESKTOP GALLERY
@@ -29,7 +43,7 @@ const GRAIN =
    - Users can freely scroll past the section at any point — the sticky panel
      just shows whatever progress they've reached.
    ────────────────────────────────────────────────────────────────────────── */
-const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
+const DesktopGallery = ({ artworks, modelView, onModelView }: { artworks: Artwork[]; modelView: boolean; onModelView: (on: boolean) => void }) => {
     const outerRef        = useRef<HTMLDivElement>(null);
     const trackRef        = useRef<HTMLDivElement>(null);
     const rafRef          = useRef<number>(0);
@@ -37,10 +51,14 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
     const targetXRef      = useRef(0);
     const outerHeightRef  = useRef(0); // set after first render + measure
 
+    // Per-frame values are written straight to the DOM; React only re-renders
+    // when the active card changes or the end of the gallery is reached.
+    const activeRef       = useRef(0);
+    const progressBarRef  = useRef<HTMLDivElement>(null);
+
     const [activeIndex, setActiveIndex] = useState(0);
-    const [cursorPos, setCursorPos]     = useState({ x: -999, y: -999 });
     const [isReady, setIsReady]         = useState(false);
-    const [progress, setProgress]       = useState(0);
+    const [nearEnd, setNearEnd]         = useState(false);
 
     /* ── Measure & set outer height after paint ── */
     useEffect(() => {
@@ -107,7 +125,8 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
             const minX = firstCx - window.innerWidth / 2;
             const maxX = lastCx  - window.innerWidth / 2;
             targetXRef.current = minX + p * (maxX - minX);
-            setProgress(p);
+            if (progressBarRef.current) progressBarRef.current.style.width = `${p * 100}%`;
+            setNearEnd(p >= 0.97);
         };
 
         window.addEventListener("scroll", onScroll, { passive: true });
@@ -126,7 +145,10 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                     const d  = Math.abs(cx - screenCx);
                     if (d < bestDist) { bestDist = d; best = i; }
                 });
-                setActiveIndex(best);
+                if (best !== activeRef.current) {
+                    activeRef.current = best;
+                    setActiveIndex(best);
+                }
             }
             rafRef.current = requestAnimationFrame(tick);
         };
@@ -140,17 +162,12 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
         };
     }, [artworks.length]);
 
-    const onMouseMove = useCallback((e: React.MouseEvent) => {
-        setCursorPos({ x: e.clientX, y: e.clientY });
-    }, []);
-
     return (
         /* Outer: height set dynamically via JS after measure */
         <div ref={outerRef} id="artworks" style={{ position: "relative" }}>
 
             {/* Sticky viewport panel */}
             <div
-                onMouseMove={onMouseMove}
                 style={{
                     position: "sticky",
                     top: 0,
@@ -158,37 +175,10 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                     height: "100vh",
                     background: "#080808",
                     overflow: "hidden",
-                    cursor: "none",
                 }}
             >
                 {/* grain */}
-                <div aria-hidden style={{
-                    position: "absolute", inset: 0,
-                    backgroundImage: GRAIN, backgroundSize: "256px 256px",
-                    opacity: 0.55, pointerEvents: "none", zIndex: 10,
-                    animation: "grainShift 0.12s steps(1) infinite",
-                }} />
-
-                {/* spotlight */}
-                <div aria-hidden style={{
-                    position: "fixed",
-                    left: cursorPos.x, top: cursorPos.y,
-                    width: 420, height: 420,
-                    transform: "translate(-50%,-50%)",
-                    background: "radial-gradient(circle, rgba(207,163,85,0.12) 0%, rgba(207,163,85,0.04) 40%, transparent 68%)",
-                    pointerEvents: "none", zIndex: 9, mixBlendMode: "screen",
-                }} />
-
-                {/* cursor dot */}
-                <div aria-hidden style={{
-                    position: "fixed",
-                    left: cursorPos.x, top: cursorPos.y,
-                    width: 7, height: 7, borderRadius: "50%",
-                    background: "#cfa355",
-                    transform: "translate(-50%,-50%)",
-                    pointerEvents: "none", zIndex: 20,
-                    boxShadow: "0 0 10px rgba(207,163,85,0.85)",
-                }} />
+                <div aria-hidden style={{ ...grainLayer(0.55), zIndex: 10 }} />
 
                 {/* header — fixed to top-left, clear of image area */}
                 <div style={{
@@ -207,10 +197,18 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                     }}>Artworks</h2>
                 </div>
 
-                {/* progress bar */}
+                {/* view toggle */}
                 <div style={{
+                    position: "absolute", top: 30, right: 52, zIndex: 15,
+                    opacity: isReady ? 1 : 0, transition: "opacity 0.8s 0.3s",
+                }}>
+                    <ViewToggle on={modelView} onChange={onModelView} />
+                </div>
+
+                {/* progress bar */}
+                <div ref={progressBarRef} style={{
                     position: "absolute", top: 0, left: 0,
-                    width: `${progress * 100}%`, height: 1,
+                    width: 0, height: 1,
                     background: "linear-gradient(to right, transparent, #cfa355 60%)",
                     zIndex: 15, opacity: isReady ? 1 : 0,
                     transition: "width 0.06s linear",
@@ -234,7 +232,7 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                 <div style={{
                     position: "absolute", bottom: 36, right: 52, zIndex: 15,
                     display: "flex", alignItems: "center", gap: 10,
-                    opacity: isReady && progress < 0.97 ? 0.38 : 0,
+                    opacity: isReady && !nearEnd && !modelView ? 0.38 : 0,
                     transition: "opacity 0.5s",
                 }}>
                     <span style={{
@@ -246,6 +244,14 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                         <polyline points="22,1 28,4 22,7" stroke="white" strokeWidth="0.8" fill="none" />
                     </svg>
                 </div>
+
+                {/* model-view note */}
+                <p style={{
+                    position: "absolute", bottom: 34, right: 52, zIndex: 15, maxWidth: 420, margin: 0,
+                    textAlign: "right", opacity: modelView ? 0.5 : 0, transition: "opacity 0.5s",
+                }} className="font-mono text-[10px] leading-relaxed tracking-[0.04em] text-white">
+                    {MODEL_NOTE}
+                </p>
 
                 {/* ── Track: no paddingLeft/Right — centering handled via JS ── */}
                 <div
@@ -268,18 +274,12 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                             art={art}
                             index={i}
                             isActive={i === activeIndex}
+                            modelView={modelView}
                         />
                     ))}
                 </div>
 
                 <style>{`
-                    @keyframes grainShift {
-                        0%   { background-position: 0 0; }
-                        25%  { background-position: -40px 20px; }
-                        50%  { background-position: 20px -30px; }
-                        75%  { background-position: -10px 40px; }
-                        100% { background-position: 0 0; }
-                    }
                     @keyframes revealLine {
                         from { transform: scaleX(0); }
                         to   { transform: scaleX(1); }
@@ -292,10 +292,12 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
 
 /* ─── Art Card ─── */
 const ArtCard = ({
-    art, index, isActive,
+    art, index, isActive, modelView,
 }: {
-    art: Artwork; index: number; isActive: boolean;
-}) => (
+    art: Artwork; index: number; isActive: boolean; modelView: boolean;
+}) => {
+    const imgRef = useRef<HTMLImageElement>(null);
+    return (
     <div style={{
         flexShrink: 0,
         display: "flex",
@@ -319,6 +321,7 @@ const ArtCard = ({
             transition: "box-shadow 0.8s",
         }}>
             <img
+                ref={imgRef}
                 src={art.image}
                 alt={art.name}
                 loading="lazy"
@@ -341,8 +344,9 @@ const ArtCard = ({
                 background: "linear-gradient(to bottom, transparent 65%, rgba(0,0,0,0.38) 100%)",
                 pointerEvents: "none",
             }} />
+            <ModelLayer art={art} on={modelView} active={isActive} imgRef={imgRef} />
             <span style={{
-                position: "absolute", top: 14, right: 14,
+                position: "absolute", top: 14, right: 14, zIndex: 4,
                 fontSize: 9, letterSpacing: "0.35em",
                 color: "rgba(255,255,255,0.4)",
                 fontVariantNumeric: "tabular-nums",
@@ -369,24 +373,25 @@ const ArtCard = ({
             }}>
                 {art.name}
             </p>
+            {modelView && (
+                <span className="bg-gold px-1.5 py-px font-mono text-[10px] leading-3.5 tracking-[0.06em] text-ink animate-[fadeIn_0.4s_ease-out_both]">
+                    {art.model.subject} {art.model.score.toFixed(2)}
+                </span>
+            )}
         </div>
     </div>
-);
+    );
+};
 
 /* ──────────────────────────────────────────
    MOBILE
    ────────────────────────────────────────── */
-const MobileGallery = ({ artworks }: { artworks: Artwork[] }) => (
+const MobileGallery = ({ artworks, modelView, onModelView }: { artworks: Artwork[]; modelView: boolean; onModelView: (on: boolean) => void }) => (
     <section id="artworks" style={{
         background: "#080808", padding: "80px 0 100px",
         position: "relative", overflow: "hidden",
     }}>
-        <div aria-hidden style={{
-            position: "absolute", inset: 0,
-            backgroundImage: GRAIN, backgroundSize: "256px 256px",
-            opacity: 0.5, pointerEvents: "none",
-            animation: "mgrainShift 0.14s steps(1) infinite",
-        }} />
+        <div aria-hidden style={grainLayer(0.5)} />
 
         <div style={{ textAlign: "center", marginBottom: 64, position: "relative", zIndex: 2 }}>
             <p style={{
@@ -398,20 +403,22 @@ const MobileGallery = ({ artworks }: { artworks: Artwork[] }) => (
                 textTransform: "uppercase", fontWeight: 500, margin: 0,
             }}>Artworks</h2>
             <div style={{ width: 28, height: 1, background: "#cfa355", margin: "14px auto 0" }} />
+            <div style={{ display: "flex", justifyContent: "center", marginTop: 28 }}>
+                <ViewToggle on={modelView} onChange={onModelView} />
+            </div>
+            <p
+                className="font-mono text-[10px] leading-relaxed tracking-[0.04em] text-white/45"
+                style={{ margin: "14px auto 0", maxWidth: 300, opacity: modelView ? 1 : 0, transition: "opacity 0.5s" }}
+            >
+                {MODEL_NOTE}
+            </p>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 0, position: "relative", zIndex: 2 }}>
-            {artworks.map((art, i) => <MobileCard key={art.name} art={art} index={i} />)}
+            {artworks.map((art, i) => <MobileCard key={art.name} art={art} index={i} modelView={modelView} />)}
         </div>
 
         <style>{`
-            @keyframes mgrainShift {
-                0%   { background-position: 0 0; }
-                25%  { background-position: -40px 20px; }
-                50%  { background-position: 20px -30px; }
-                75%  { background-position: -10px 40px; }
-                100% { background-position: 0 0; }
-            }
             .mc-enter   { opacity: 0; transform: translateY(36px); }
             .mc-visible {
                 opacity: 1 !important; transform: translateY(0) !important;
@@ -422,8 +429,9 @@ const MobileGallery = ({ artworks }: { artworks: Artwork[] }) => (
     </section>
 );
 
-const MobileCard = ({ art, index }: { art: Artwork; index: number }) => {
+const MobileCard = ({ art, index, modelView }: { art: Artwork; index: number; modelView: boolean }) => {
     const ref = useRef<HTMLDivElement>(null);
+    const imgRef = useRef<HTMLImageElement>(null);
     const [visible, setVisible] = useState(false);
     const isOdd = index % 2 !== 0;
 
@@ -464,6 +472,7 @@ const MobileCard = ({ art, index }: { art: Artwork; index: number }) => {
                 boxShadow: "0 20px 60px rgba(0,0,0,0.6)",
             }}>
                 <img
+                    ref={imgRef}
                     src={art.image}
                     alt={art.name}
                     loading="lazy"
@@ -478,6 +487,7 @@ const MobileCard = ({ art, index }: { art: Artwork; index: number }) => {
                     position: "absolute", inset: 0,
                     background: "linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.45) 100%)",
                 }} />
+                <ModelLayer art={art} on={modelView} imgRef={imgRef} />
             </div>
 
             <div style={{
@@ -502,6 +512,7 @@ const MobileCard = ({ art, index }: { art: Artwork; index: number }) => {
 
 /* ─── Root ─── */
 const Artworks = () => {
+    const [modelView, setModelView] = useState(false);
     const [isMobile, setIsMobile] = useState(
         () => typeof window !== "undefined" && window.innerWidth < 768
     );
@@ -513,9 +524,14 @@ const Artworks = () => {
         return () => window.removeEventListener("resize", check);
     }, []);
 
-    return isMobile
-        ? <MobileGallery artworks={ArtworkData} />
-        : <DesktopGallery artworks={ArtworkData} />;
+    return (
+        <>
+            <ModelFilterDefs />
+            {isMobile
+                ? <MobileGallery artworks={artworkData} modelView={modelView} onModelView={setModelView} />
+                : <DesktopGallery artworks={artworkData} modelView={modelView} onModelView={setModelView} />}
+        </>
+    );
 };
 
 export default Artworks;
