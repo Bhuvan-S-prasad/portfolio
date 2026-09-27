@@ -4,8 +4,10 @@ import { navItems } from "../content/navigation";
 import { profile, socials } from "../content/profile";
 import { gsap, useGSAP } from "../lib/motion";
 import { grainLayer } from "../lib/grain";
-import { confidenceFor } from "../lib/annotate";
-import DetectionBox from "./annotate/DetectionBox";
+import { measurePage, type PageMap as PageMapData } from "../lib/pageMap";
+import PageMap from "./nav/PageMap";
+
+const NAV_IDS = navItems.map((item) => item.href.replace(/^#/, ""));
 
 const Navbar = () => {
     /* ── refs ── */
@@ -26,6 +28,9 @@ const Navbar = () => {
     const [showBtn, setShowBtn]         = useState(true);
     const [time, setTime]               = useState("");
     const [preview, setPreview]         = useState(0);
+    const [pageMap, setPageMap]         = useState<PageMapData | null>(null);
+    // The section the reader is in when the menu opens; its link gets focus.
+    const hereRef = useRef(0);
 
     const lenis = useLenis();
 
@@ -108,6 +113,14 @@ const Navbar = () => {
             iconTLRef.current?.reverse();
             lenis?.start();
         } else {
+            // Snapshot the page for the map, and start the caption where the reader is.
+            const map = measurePage(NAV_IDS);
+            const mid = map.view.top + map.view.height / 2;
+            const here = map.segments.find((seg) => seg.nav !== null && mid >= seg.top && mid < seg.top + seg.height)
+                ?? [...map.segments].reverse().find((seg) => seg.nav !== null && seg.top <= mid);
+            hereRef.current = here?.nav ?? 0;
+            setPageMap(map);
+            setPreview(hereRef.current);
             tlRef.current?.play();
             iconTLRef.current?.play();
             lenis?.stop();
@@ -130,8 +143,10 @@ const Navbar = () => {
     useEffect(() => {
         if (!isOpen) return;
 
-        const firstLink = overlayRef.current?.querySelector<HTMLElement>("button, a");
-        const focusTimer = window.setTimeout(() => firstLink?.focus(), 400);
+        // Focus the link for where the reader is, so the map caption starts there too.
+        const links = overlayRef.current?.querySelectorAll<HTMLElement>('nav[aria-label="Main navigation"] button');
+        const current = links?.[hereRef.current] ?? links?.[0];
+        const focusTimer = window.setTimeout(() => current?.focus({ preventScroll: true }), 400);
 
         const onKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
@@ -283,7 +298,7 @@ const Navbar = () => {
                                             {/* name */}
                                             <span style={{
                                                 color: "rgba(255,255,255,0.45)",
-                                                fontSize: "clamp(2rem, 6.8vh, 6.2rem)",
+                                                fontSize: "clamp(1.75rem, 5.6vh, 5.4rem)",
                                                 fontWeight: 300,
                                                 letterSpacing: "-0.02em",
                                                 textTransform: "uppercase",
@@ -300,39 +315,8 @@ const Navbar = () => {
                             </ul>
                         </nav>
 
-                        {/* live preview of the hovered / focused section */}
-                        <div aria-hidden className="pointer-events-none absolute right-0 top-1/2 hidden md:block w-[clamp(260px,30vw,460px)] aspect-4/3 -translate-y-1/2">
-                            <DetectionBox
-                                className="-inset-3 z-10"
-                                label={navItems[preview].name.toLowerCase()}
-                                confidence={confidenceFor(navItems[preview].name)}
-                            />
-                            {navItems.map((item, i) => (
-                                <div
-                                    key={item.name}
-                                    className={`absolute inset-0 overflow-hidden border border-white/10 bg-white/3
-                                        transition-[clip-path,opacity] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
-                                        ${i === preview ? "opacity-100 [clip-path:inset(0_0_0_0)]" : "opacity-0 [clip-path:inset(100%_0_0_0)]"}`}
-                                >
-                                    {item.preview.image && (
-                                        <img
-                                            src={item.preview.image}
-                                            alt=""
-                                            loading="lazy"
-                                            className="size-full object-cover object-top opacity-70"
-                                        />
-                                    )}
-                                    <div className="absolute inset-x-0 bottom-0 p-5 lg:p-6 bg-linear-to-t from-black via-black/80 to-transparent pt-16">
-                                        <p className="font-serif italic text-2xl lg:text-3xl leading-tight text-white">
-                                            {item.preview.line}
-                                        </p>
-                                        <p className="mt-2 font-mono text-[11px] tracking-[0.08em] text-white/50">
-                                            {item.preview.meta}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        {/* true-to-scale map of the page, with where you are */}
+                        <PageMap map={pageMap} open={isOpen} active={preview} onHover={setPreview} onGo={handleNavClick} />
                     </div>
 
                     {/* bottom meta row */}

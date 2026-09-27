@@ -2,22 +2,10 @@ import { skills } from "./skills";
 import { projects } from "./projects";
 
 /**
- * Hand-placed "embedding" layout for the Skills map: where each cluster sits
- * (0–1 of the map), which skills relate across clusters, and the keyword
- * aliases the search understands. No model involved — just curated data.
+ * Curated data behind the Skills section: which skills relate across
+ * clusters, and the keyword aliases the search understands. No model involved.
  */
-export const clusterCentres: Record<string, { x: number; y: number }> = {
-    "Engineering & Architecture": { x: 0.5, y: 0.13 },
-    "AI Expertise": { x: 0.25, y: 0.34 },
-    "Modeling & Systems": { x: 0.5, y: 0.47 },
-    "Machine Learning": { x: 0.2, y: 0.78 },
-    "Frameworks & Libraries": { x: 0.77, y: 0.3 },
-    "Languages": { x: 0.9, y: 0.6 },
-    "Data & Databases": { x: 0.5, y: 0.83 },
-    "Web & Cloud": { x: 0.76, y: 0.82 },
-};
-
-/** Cross-cluster relations drawn as faint arcs. */
+/** Cross-cluster relations, drawn as links when a skill is focused. */
 export const related: [string, string][] = [
     ["PyTorch", "Deep Learning"],
     ["TensorFlow", "Deep Learning"],

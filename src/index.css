@@ -57,8 +57,8 @@ html.has-cursor * {
 /* Projects stage: frames fade out softly as they slide behind the index. */
 @media (min-width: 768px) {
     .stage-mask {
-        -webkit-mask-image: linear-gradient(to right, transparent 0, black 7vw);
-        mask-image: linear-gradient(to right, transparent 0, black 7vw);
+        -webkit-mask-image: linear-gradient(to right, transparent 0, black 2vw);
+        mask-image: linear-gradient(to right, transparent 0, black 2vw);
     }
 }
 
@@ -72,6 +72,12 @@ html.has-cursor * {
     0%   { transform: translateY(var(--scan)); opacity: 1; }
     90%  { opacity: 1; }
     100% { transform: translateY(0); opacity: 0; }
+}
+
+/* Draws an SVG path with pathLength="1" from start to end. */
+@keyframes drawLine {
+    from { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    to   { stroke-dasharray: 1; stroke-dashoffset: 0; }
 }
 
 /* A small horizontal "go this way" hint. */

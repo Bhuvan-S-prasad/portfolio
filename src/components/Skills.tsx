@@ -1,18 +1,16 @@
 import { useDeferredValue, useMemo, useState } from "react"
 import { skills } from "../content/skills"
 import { searchSkills, usageFor } from "../content/skillSpace"
-import { useMediaQuery } from "../lib/motion"
 import AnimatedHeader from "./UI/AnimatedHeader"
 import SkillSearch from "./skills/SkillSearch"
-import SkillSpace from "./skills/SkillSpace"
-import SkillGrid from "./skills/SkillGrid"
+import SkillAtlas from "./skills/SkillAtlas"
 
 const TOTAL = skills.reduce((n, g) => n + g.items.length, 0)
 
 /**
- * Skills as a capability space: a hand-placed map of clusters you can query.
- * Search is keyword + curated aliases — no model. Hovering a skill shows
- * where it has been used. Phones and tablets get a grouped list instead.
+ * Skills as a readable grid of clusters you can query. Search is keyword +
+ * curated aliases — no model. Focusing a skill links it to related skills
+ * and shows where it has been used.
  */
 const Skills = () => {
     const [query, setQuery] = useState("")
@@ -20,7 +18,6 @@ const Skills = () => {
     const deferred = useDeferredValue(query)
     const matches = useMemo(() => searchSkills(deferred), [deferred])
     const querying = deferred.trim().length >= 2
-    const wide = useMediaQuery("(min-width: 1024px)")
 
     // What the info strip describes: the hovered skill, else the best match.
     const subject = focus ?? (querying ? [...matches.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null : null)
@@ -46,36 +43,30 @@ const Skills = () => {
                     clusters={skills.length}
                 />
 
-                {wide ? (
-                    <div className="pt-8">
-                        <SkillSpace matches={matches} querying={querying} focus={focus} onFocus={setFocus} />
+                <div className="pt-8">
+                    <SkillAtlas matches={matches} querying={querying} focus={focus} onFocus={setFocus} />
 
-                        {/* Info strip */}
-                        <div className="mt-6 flex min-h-12 flex-wrap items-baseline gap-x-6 gap-y-2 border-t border-white/10 pt-5 font-mono text-[11px] uppercase tracking-[0.14em]">
-                            {subject ? (
-                                <>
-                                    <span className="text-white">
-                                        <span className="mr-2 text-gold">›</span>{subject}
-                                    </span>
-                                    <span className="text-white/35">{subjectGroup}</span>
-                                    <span className="text-white/35">
-                                        {usage.length ? "used in" : "core skill"}
-                                        {usage.length > 0 && <span className="ml-3 normal-case tracking-normal text-white/75 font-sans text-sm">{usage.join(" · ")}</span>}
-                                    </span>
-                                </>
-                            ) : (
-                                <span className="text-white/35">hover a skill to see where it's used · dashed arcs link related skills across clusters</span>
-                            )}
-                        </div>
+                    {/* Info strip */}
+                    <div className="flex min-h-14 flex-wrap items-baseline gap-x-6 gap-y-2 border-t border-white/10 pt-5 font-mono text-[11px] uppercase tracking-[0.14em]" aria-live="polite">
+                        {subject ? (
+                            <>
+                                <span className="text-white">
+                                    <span className="mr-2 text-gold">›</span>{subject}
+                                </span>
+                                <span className="text-white/35">{subjectGroup}</span>
+                                <span className="text-white/35">
+                                    {usage.length ? "used in" : "core skill"}
+                                    {usage.length > 0 && <span className="ml-3 font-sans text-sm normal-case tracking-normal text-white/75">{usage.join(" · ")}</span>}
+                                </span>
+                            </>
+                        ) : (
+                            <span className="text-white/35">hover or tap a skill to see where it's used and what it connects to</span>
+                        )}
                     </div>
-                ) : (
-                    <div className="pt-4">
-                        <SkillGrid matches={matches} querying={querying} />
-                    </div>
-                )}
+                </div>
 
                 <p className="mt-10 font-mono text-[10px] leading-relaxed tracking-[0.04em] text-white/30">
-                    Keyword search over a hand-curated map — no model involved. Positions are placed by hand, not learned.
+                    Keyword search over a hand-curated list — no model involved. Links between skills are curated by hand.
                 </p>
             </div>
         </section>

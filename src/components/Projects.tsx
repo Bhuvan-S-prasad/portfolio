@@ -119,9 +119,10 @@ const Projects = () => {
 
                 // Passing behind the index: sink back and fade, so no frame is ever cut in half.
                 if (horizontal) {
-                    const behind = clamp01((stage.left + stage.width * 0.04 - r.left) / (r.width * 0.55))
-                    slide.style.opacity = String(1 - behind)
-                    slide.style.scale = String(1 - behind * 0.08)
+                    // Starts only once the frame actually crosses under the index.
+                    const behind = clamp01((stage.left - r.left) / (r.width * 0.6))
+                    slide.style.opacity = String(1 - behind * behind)
+                    slide.style.scale = String(1 - behind * 0.06)
                     slide.style.transformOrigin = "100% 50%"
                 }
 

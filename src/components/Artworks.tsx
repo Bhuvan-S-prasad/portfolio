@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { artworks as artworkData, type Artwork } from "../content/artworks";
 import { ScrollTrigger } from "../lib/motion";
 import { grainLayer } from "../lib/grain";
@@ -54,7 +54,6 @@ const DesktopGallery = ({ artworks, modelView, onModelView }: { artworks: Artwor
     // Per-frame values are written straight to the DOM; React only re-renders
     // when the active card changes or the end of the gallery is reached.
     const activeRef       = useRef(0);
-    const spotlightRef    = useRef<HTMLDivElement>(null);
     const progressBarRef  = useRef<HTMLDivElement>(null);
 
     const [activeIndex, setActiveIndex] = useState(0);
@@ -163,18 +162,12 @@ const DesktopGallery = ({ artworks, modelView, onModelView }: { artworks: Artwor
         };
     }, [artworks.length]);
 
-    const onMouseMove = useCallback((e: React.MouseEvent) => {
-        const at = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-        if (spotlightRef.current) spotlightRef.current.style.transform = at;
-    }, []);
-
     return (
         /* Outer: height set dynamically via JS after measure */
         <div ref={outerRef} id="artworks" style={{ position: "relative" }}>
 
             {/* Sticky viewport panel */}
             <div
-                onMouseMove={onMouseMove}
                 style={{
                     position: "sticky",
                     top: 0,
@@ -186,16 +179,6 @@ const DesktopGallery = ({ artworks, modelView, onModelView }: { artworks: Artwor
             >
                 {/* grain */}
                 <div aria-hidden style={{ ...grainLayer(0.55), zIndex: 10 }} />
-
-                {/* spotlight */}
-                <div ref={spotlightRef} aria-hidden style={{
-                    position: "fixed",
-                    left: 0, top: 0,
-                    width: 420, height: 420,
-                    transform: "translate(-999px, -999px)",
-                    background: "radial-gradient(circle, rgba(207,163,85,0.12) 0%, rgba(207,163,85,0.04) 40%, transparent 68%)",
-                    pointerEvents: "none", zIndex: 9, mixBlendMode: "screen",
-                }} />
 
                 {/* header — fixed to top-left, clear of image area */}
                 <div style={{

@@ -6,11 +6,10 @@ import { focusAreas } from "./expertise";
 import { skills } from "./skills";
 
 export type NavItem = Link & {
-    /** Shown in the fullscreen menu while the link is hovered or focused. */
+    /** Shown beside the page map in the fullscreen menu while the link is hovered or focused. */
     preview: {
         line: string;
         meta: string;
-        image?: string;
     };
 };
 
@@ -40,7 +39,7 @@ export const navItems: NavItem[] = [
     {
         name: "Projects",
         href: "#projects",
-        preview: { line: projects[0].name, meta: `${projects.length} projects`, image: projects[0].image },
+        preview: { line: "Rendered on scroll.", meta: `${projects.length} projects · case files & demos` },
     },
     {
         name: "Skills",
@@ -50,7 +49,7 @@ export const navItems: NavItem[] = [
     {
         name: "Artworks",
         href: "#artworks",
-        preview: { line: artworks[0].name, meta: `${artworks.length} drawings`, image: artworks[0].image },
+        preview: { line: "Beyond code.", meta: `${artworks.length} drawings · human & model view` },
     },
     {
         name: "Contact",
