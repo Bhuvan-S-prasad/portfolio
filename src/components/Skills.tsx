@@ -1,66 +1,34 @@
-import { useRef } from 'react'
-import { gsap, useGSAP } from '../lib/motion'
-import { skills } from '../content/skills'
-import AnimatedHeader from './UI/AnimatedHeader'
+import { useDeferredValue, useMemo, useState } from "react"
+import { skills } from "../content/skills"
+import { searchSkills, usageFor } from "../content/skillSpace"
+import { useMediaQuery } from "../lib/motion"
+import AnimatedHeader from "./UI/AnimatedHeader"
+import SkillSearch from "./skills/SkillSearch"
+import SkillSpace from "./skills/SkillSpace"
+import SkillGrid from "./skills/SkillGrid"
 
+const TOTAL = skills.reduce((n, g) => n + g.items.length, 0)
+
+/**
+ * Skills as a capability space: a hand-placed map of clusters you can query.
+ * Search is keyword + curated aliases — no model. Hovering a skill shows
+ * where it has been used. Phones and tablets get a grouped list instead.
+ */
 const Skills = () => {
-    const sectionRef = useRef<HTMLElement>(null)
-    const blockRefs = useRef<(HTMLDivElement | null)[]>([])
+    const [query, setQuery] = useState("")
+    const [focus, setFocus] = useState<string | null>(null)
+    const deferred = useDeferredValue(query)
+    const matches = useMemo(() => searchSkills(deferred), [deferred])
+    const querying = deferred.trim().length >= 2
+    const wide = useMediaQuery("(min-width: 1024px)")
 
-    useGSAP(() => {
-        // Per-block choreographed animation
-        skills.forEach((_, index) => {
-            const block = blockRefs.current[index]
-            if (!block) return
-
-            const line = block.querySelector('.skill-line')
-            const label = block.querySelector('.skill-label')
-            const tags = block.querySelectorAll('.skill-tag')
-
-            gsap.set(line, { scaleX: 0, transformOrigin: 'left center' })
-            if (label) gsap.set(label, { opacity: 0, y: 12 })
-            if (tags.length) gsap.set(tags, { opacity: 0, y: 10 })
-
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: block,
-                    start: 'top 88%',
-                },
-            })
-
-            tl.to(line, {
-                scaleX: 1,
-                duration: 0.7,
-                ease: 'power3.inOut',
-            })
-
-            if (label) {
-                tl.to(label, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.5,
-                    ease: 'power2.out',
-                }, '-=0.3')
-            }
-
-            if (tags.length) {
-                tl.to(tags, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.35,
-                    stagger: 0.04,
-                    ease: 'power2.out',
-                }, '-=0.2')
-            }
-        })
-    }, [])
+    // What the info strip describes: the hovered skill, else the best match.
+    const subject = focus ?? (querying ? [...matches.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null : null)
+    const subjectGroup = subject ? skills.find((g) => g.items.includes(subject))?.category : null
+    const usage = subject ? usageFor(subject) : []
 
     return (
-        <section
-            ref={sectionRef}
-            id="skills"
-            className="relative pb-20 sm:pb-28 md:pb-36 lg:pb-44 overflow-hidden bg-neutral-950 rounded-t-4xl"
-        >
+        <section id="skills" className="relative overflow-hidden rounded-t-4xl bg-neutral-950 pb-20 sm:pb-28 md:pb-36">
             <AnimatedHeader
                 title="Skills"
                 subTitle="What I work with"
@@ -69,51 +37,45 @@ const Skills = () => {
                 withScrollTrigger={true}
             />
 
-            {/* Skills Grid */}
-            <div className="px-6 sm:px-10 pt-6 sm:pt-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-20 xl:gap-x-28">
-                    {skills.map((group, index) => (
-                        <div
-                            key={index}
-                            ref={(el) => { blockRefs.current[index] = el }}
-                            className="py-7 sm:py-9"
-                        >
-                            {/* Animated divider line */}
-                            <div className="skill-line h-px bg-white/10 mb-5 sm:mb-6" />
+            <div className="px-6 pt-6 sm:px-10 sm:pt-10">
+                <SkillSearch
+                    query={query}
+                    onQuery={setQuery}
+                    matchCount={matches.size}
+                    total={TOTAL}
+                    clusters={skills.length}
+                />
 
-                            {/* Category label */}
-                            <p className="skill-label text-[10px] sm:text-xs uppercase tracking-[0.2rem] sm:tracking-[0.3rem] text-gold font-light mb-4 sm:mb-5">
-                                {group.category}
-                            </p>
+                {wide ? (
+                    <div className="pt-8">
+                        <SkillSpace matches={matches} querying={querying} focus={focus} onFocus={setFocus} />
 
-                            {/* Skill tags */}
-                            <div className="flex flex-wrap items-center gap-x-2.5 sm:gap-x-3 gap-y-2.5 sm:gap-y-3">
-                                {group.items.map((item, i) => (
-                                    <span
-                                        key={i}
-                                        className="skill-tag flex items-center gap-2.5 sm:gap-3"
-                                    >
-                                        <span className="text-sm sm:text-base lg:text-lg font-extralight text-white/70 tracking-wide">
-                                            {item}
-                                        </span>
-                                        {i < group.items.length - 1 && (
-                                            <span className="text-gold text-[5px] sm:text-[6px]">●</span>
-                                        )}
+                        {/* Info strip */}
+                        <div className="mt-6 flex min-h-12 flex-wrap items-baseline gap-x-6 gap-y-2 border-t border-white/10 pt-5 font-mono text-[11px] uppercase tracking-[0.14em]">
+                            {subject ? (
+                                <>
+                                    <span className="text-white">
+                                        <span className="mr-2 text-gold">›</span>{subject}
                                     </span>
-                                ))}
-                            </div>
+                                    <span className="text-white/35">{subjectGroup}</span>
+                                    <span className="text-white/35">
+                                        {usage.length ? "used in" : "core skill"}
+                                        {usage.length > 0 && <span className="ml-3 normal-case tracking-normal text-white/75 font-sans text-sm">{usage.join(" · ")}</span>}
+                                    </span>
+                                </>
+                            ) : (
+                                <span className="text-white/35">hover a skill to see where it's used · dashed arcs link related skills across clusters</span>
+                            )}
                         </div>
-                    ))}
-                </div>
-            </div>
+                    </div>
+                ) : (
+                    <div className="pt-4">
+                        <SkillGrid matches={matches} querying={querying} />
+                    </div>
+                )}
 
-            {/* Footer tagline */}
-            <div className="absolute bottom-8 sm:bottom-12 right-6 sm:right-10 text-right">
-                <p className="text-[10px] sm:text-xs md:text-sm text-white/20 tracking-widest uppercase">
-                    Always Learning
-                </p>
-                <p className="text-[10px] sm:text-xs md:text-sm text-white/20 tracking-widest uppercase">
-                    Always Building
+                <p className="mt-10 font-mono text-[10px] leading-relaxed tracking-[0.04em] text-white/30">
+                    Keyword search over a hand-curated map — no model involved. Positions are placed by hand, not learned.
                 </p>
             </div>
         </section>

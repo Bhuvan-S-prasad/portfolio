@@ -62,6 +62,18 @@ html.has-cursor * {
     }
 }
 
+/* Artworks model view: the scan line that sweeps the drawing (height in --scan). */
+@keyframes scanDown {
+    0%   { transform: translateY(0); opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(var(--scan)); opacity: 0; }
+}
+@keyframes scanUp {
+    0%   { transform: translateY(var(--scan)); opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(0); opacity: 0; }
+}
+
 /* A small horizontal "go this way" hint. */
 @keyframes nudge {
     0%, 100% { transform: translateX(0); }

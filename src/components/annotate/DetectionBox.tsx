@@ -10,6 +10,10 @@ interface DetectionBoxProps {
     labelRef?: Ref<HTMLSpanElement>;
     /** Corner bracket length in px. */
     corner?: number;
+    /** Put the label just inside the top edge (for boxes that touch a clipped edge). */
+    labelInside?: boolean;
+    /** Anchor the label to the box's right edge (for boxes near a clipped right edge). */
+    labelRight?: boolean;
 }
 
 const CORNERS = [
@@ -31,6 +35,8 @@ const DetectionBox = ({
     ref,
     labelRef,
     corner = 10,
+    labelInside = false,
+    labelRight = false,
 }: DetectionBoxProps) => (
     <div ref={ref} aria-hidden className={`pointer-events-none absolute ${className}`} style={style}>
         {CORNERS.map((pos) => (
@@ -43,7 +49,7 @@ const DetectionBox = ({
         {label && (
             <span
                 ref={labelRef}
-                className="absolute left-0 -top-4.5 whitespace-nowrap bg-gold px-1.5 py-px font-mono text-[10px] leading-3.5 tracking-[0.06em] text-ink"
+                className={`absolute ${labelRight ? "right-0" : "left-0"} ${labelInside ? "top-0" : "-top-4.5"} whitespace-nowrap bg-gold px-1.5 py-px font-mono text-[10px] leading-3.5 tracking-[0.06em] text-ink`}
             >
                 {label}
                 {confidence !== undefined && <span className="opacity-60"> {confidence.toFixed(2)}</span>}
