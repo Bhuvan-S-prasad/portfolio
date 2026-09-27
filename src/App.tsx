@@ -25,7 +25,7 @@ function App() {
         <Hero ready={ready} />
 
         {/* About + Expertise share one dark surface, so they transition as one chapter. */}
-        <Chapter enter exit className="bg-black">
+        <Chapter exit className="bg-black rounded-t-4xl">
           <About />
           <FocusArea />
         </Chapter>

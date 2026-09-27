@@ -1,10 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 interface TorchEffectProps {
-    text: string;
+    children: ReactNode;
+    /** Lift the darkness entirely (e.g. while the paragraph is being explained). */
+    revealed?: boolean;
 }
 
-const TorchEffect = ({ text }: TorchEffectProps) => {
+const TorchEffect = ({ children, revealed = false }: TorchEffectProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -60,13 +62,14 @@ const TorchEffect = ({ text }: TorchEffectProps) => {
         <div ref={containerRef} className="relative overflow-hidden">
             <div className="flex relative px-10 md:px-20 py-20">
                 <p className="text-2xl md:text-4xl lg:text-5xl font-medium tracking-wide text-white leading-relaxed">
-                    {text}
+                    {children}
                 </p>
             </div>
             <div
                 ref={overlayRef}
-                className="absolute inset-0 pointer-events-none z-10"
+                className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-700"
                 style={{
+                    opacity: revealed ? 0 : 1,
                     background: `radial-gradient(
                         circle 250px at var(--torch-x, -1000px) var(--torch-y, -1000px),
                         transparent 0%,

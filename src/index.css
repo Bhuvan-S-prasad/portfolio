@@ -49,6 +49,11 @@ html.has-cursor * {
     outline-offset: 4px;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
 /* ── Navbar custom styles ── */
 @keyframes navGrain {
     0%   { background-position: 0 0; }

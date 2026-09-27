@@ -38,11 +38,17 @@ const Cursor = () => {
         let frame = 0;
         let tick = 0;
 
+        let shown = "";
         const setTarget = (next: HTMLElement | null) => {
-            if (next === target) return;
             target = next;
             const text = target?.dataset.cursor;
-            if (text) label.textContent = `${text} ${confidenceFor(text).toFixed(2)}`;
+            // An explicit score (e.g. an attribution weight) wins over the label's pseudo-confidence.
+            const score = target?.dataset.cursorScore ?? (text ? confidenceFor(text).toFixed(2) : "");
+            // Same element can change its label (e.g. a toggle), so compare text, not identity.
+            const labelText = text ? `${text} ${score}` : "";
+            if (labelText === shown) return;
+            shown = labelText;
+            if (text) label.textContent = labelText;
             label.style.opacity = text ? "1" : "0";
         };
 
