@@ -89,7 +89,7 @@ const Contact = () => {
     }
 
     return (
-        <section ref={sectionRef} id="contact" className="min-h-screen w-full bg-black py-12 sm:py-20 lg:py-32 overflow-hidden">
+        <section ref={sectionRef} id="contact" className="min-h-screen w-full bg-black rounded-t-4xl py-12 sm:py-20 lg:py-32 overflow-hidden">
             <div className="px-5 sm:px-8 md:px-16 lg:px-24">
                 <div ref={headerRef} className="mb-8">
                     <p className="text-xs sm:text-sm tracking-[0.3rem] sm:tracking-[0.5rem] uppercase text-white/50">Get in Touch</p>

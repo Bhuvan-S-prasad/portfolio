@@ -8,6 +8,7 @@ import Chapter from "./components/UI/Chapter"
 import Cursor from "./components/UI/Cursor"
 import About from "./components/About"
 import Approach from "./components/Approach"
+import Trajectory from "./components/Trajectory"
 import Projects from "./components/Projects"
 import Artworks from "./components/Artworks"
 import ContactMe from "./components/ContactMe"
@@ -32,18 +33,18 @@ function App() {
         </Chapter>
 
         <Approach />
-        <Projects />
 
-        <Chapter enter>
-          <Skills />
+        <Chapter exit className="bg-black rounded-t-4xl">
+          <Trajectory />
         </Chapter>
+
+        <Projects />
+        <Skills />
 
         <Artworks />
         <ContactMe />
 
-        <Chapter enter className="bg-black">
-          <Contact />
-        </Chapter>
+        <Contact />
       </main>
     </SmoothScroll>
   )

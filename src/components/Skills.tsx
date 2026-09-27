@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { gsap, useGSAP } from '../lib/motion'
 import { skills } from '../content/skills'
-import SectionHeader from './UI/SectionHeader'
+import AnimatedHeader from './UI/AnimatedHeader'
 
 const Skills = () => {
     const sectionRef = useRef<HTMLElement>(null)
@@ -59,20 +59,18 @@ const Skills = () => {
         <section
             ref={sectionRef}
             id="skills"
-            className="relative pb-20 sm:pb-28 md:pb-36 lg:pb-44 overflow-hidden bg-neutral-950"
+            className="relative pb-20 sm:pb-28 md:pb-36 lg:pb-44 overflow-hidden bg-neutral-950 rounded-t-4xl"
         >
-            <SectionHeader
-                variant="indexed"
-                tone="dark"
-                index="05"
-                label="What I work with"
-                title="Skills &"
-                accent="tools"
-                text="The languages, frameworks and platforms I use to take an idea from a notebook to a working tool."
+            <AnimatedHeader
+                title="Skills"
+                subTitle="What I work with"
+                text={"The languages, frameworks and platforms\nI use to take an idea from a notebook\nto a working tool."}
+                textColor="text-white"
+                withScrollTrigger={true}
             />
 
             {/* Skills Grid */}
-            <div className="px-6 sm:px-10 md:px-16 lg:px-24">
+            <div className="px-6 sm:px-10 pt-6 sm:pt-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-20 xl:gap-x-28">
                     {skills.map((group, index) => (
                         <div
@@ -109,12 +107,8 @@ const Skills = () => {
                 </div>
             </div>
 
-            {/* Edge gradient fades */}
-            <div className="absolute top-0 left-0 w-8 sm:w-16 md:w-24 h-full bg-linear-to-r from-neutral-950 to-transparent pointer-events-none z-10" />
-            <div className="absolute top-0 right-0 w-8 sm:w-16 md:w-24 h-full bg-linear-to-l from-neutral-950 to-transparent pointer-events-none z-10" />
-
             {/* Footer tagline */}
-            <div className="absolute bottom-8 sm:bottom-12 right-6 sm:right-10 md:right-16 lg:right-24 text-right">
+            <div className="absolute bottom-8 sm:bottom-12 right-6 sm:right-10 text-right">
                 <p className="text-[10px] sm:text-xs md:text-sm text-white/20 tracking-widest uppercase">
                     Always Learning
                 </p>

@@ -1,8 +1,11 @@
 import { ArrowUpRight } from "lucide-react"
 import { projects } from "../content/projects"
 import SectionHeader from "./UI/SectionHeader"
-import { useRef, useState } from "react"
+import { lazy, Suspense, useRef, useState } from "react"
 import { gsap, useGSAP } from "../lib/motion"
+
+// Only loaded once someone opens a case file.
+const CaseFile = lazy(() => import("./projects/CaseFile"))
 
 const Projects = () => {
 
@@ -12,6 +15,7 @@ const Projects = () => {
     const descriptionRef = useRef<(HTMLDivElement | null)[]>([]);
 
     const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+    const [openCase, setOpenCase] = useState<number | null>(null);
     const moveX = useRef<gsap.QuickToFunc | null>(null);
     const moveY = useRef<gsap.QuickToFunc | null>(null);
     const mouse = useRef({ x: 0, y: 0 });
@@ -145,6 +149,11 @@ const Projects = () => {
         }
     }
 
+    const openCaseFile = (index: number) => {
+        handleMouseLeave(index);
+        setOpenCase(index);
+    }
+
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (window.innerWidth < 768) return;
         mouse.current.x = e.clientX + 24;
@@ -159,28 +168,31 @@ const Projects = () => {
             className="flex flex-col min-h-screen pb-16 sm:pb-28"
         >
             <SectionHeader
-                index="04"
                 title="Projects"
                 count={projects.length}
                 label="Selected work"
-                text="From agentic assistants and LLM-powered tools to deep learning and explainable AI — independent projects that reflect how I build: practical, reliable and thoughtfully engineered."
+                text="From agentic assistants and LLM-powered tools to deep learning and explainable AI. Open any project for its case file and a working demo."
             />
 
             <div ref={listRef} className="relative flex flex-col font-light"
                 onMouseMove={(e) => handleMouseMove(e)}
             >
                 {projects.map((project, index) => (
-                    <a
+                    <article
                         key={project.id}
-                        // Projects without a public link stay as plain, non-navigating rows.
-                        {...(project.href
-                            ? { href: project.href, target: "_blank", rel: "noopener noreferrer" }
-                            : { "aria-disabled": true })}
-                        data-cursor={project.href ? "open project" : "no public link"}
-                        className={`project-row relative flex flex-col gap-1 py-4 sm:py-5 group md:gap-0 ${project.href ? "cursor-pointer" : "cursor-default"}`}
+                        className="project-row relative flex flex-col gap-1 py-4 sm:py-5 group md:gap-0 cursor-pointer"
                         onMouseEnter={() => handleMouseEnter(index)}
                         onMouseLeave={() => handleMouseLeave(index)}
                     >
+                        {/* The whole row opens the case file. */}
+                        <button
+                            type="button"
+                            onClick={() => openCaseFile(index)}
+                            aria-label={`Open case file: ${project.name}`}
+                            aria-haspopup="dialog"
+                            data-cursor="open case file"
+                            className="absolute inset-0 z-10 cursor-pointer"
+                        />
 
                         <div ref={(el) => { overlayRef.current[index] = el }}
                             className="absolute inset-0 hidden md:block duration-200 bg-black -z-10 clip-path" />
@@ -189,7 +201,12 @@ const Projects = () => {
                             <h3 className="text-xl sm:text-2xl lg:text-[32px] leading-none font-light">
                                 {project.name}
                             </h3>
-                            {project.href && <ArrowUpRight aria-hidden className="w-5 h-5 sm:w-6 sm:h-6" />}
+                            <span className="flex items-center gap-3">
+                                <span className="hidden md:inline font-mono text-[11px] uppercase tracking-[0.14em] opacity-0 transition-opacity duration-500 md:group-hover:opacity-60">
+                                    case file
+                                </span>
+                                <ArrowUpRight aria-hidden className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </span>
                         </div>
 
                         <div className="w-full h-px sm:h-0.5 bg-black/60 sm:bg-black/80" />
@@ -218,6 +235,9 @@ const Projects = () => {
                             <p className="text-xs sm:text-sm text-black/60 leading-relaxed line-clamp-3">
                                 {project.description}
                             </p>
+                            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-black/45">
+                                <span className="text-gold">›</span> tap for the case file
+                            </p>
                         </div>
 
                         <div className="relative flex items-center justify-center px-5 sm:px-10 md:hidden">
@@ -229,7 +249,7 @@ const Projects = () => {
                                 />
                             </div>
                         </div>
-                    </a>
+                    </article>
                 ))}
 
 
@@ -239,6 +259,12 @@ const Projects = () => {
                     )}
                 </div>
             </div>
+
+            {openCase !== null && (
+                <Suspense fallback={null}>
+                    <CaseFile index={openCase} onNavigate={setOpenCase} onClose={() => setOpenCase(null)} />
+                </Suspense>
+            )}
         </section>
     )
 }
