@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react"
 import { projects } from "../content/projects"
-import AnimatedHeader from "./UI/AnimatedHeader"
+import SectionHeader from "./UI/SectionHeader"
 import { useRef, useState } from "react"
 import { gsap, useGSAP } from "../lib/motion"
 
@@ -158,11 +158,12 @@ const Projects = () => {
         <section id="projects"
             className="flex flex-col min-h-screen pb-16 sm:pb-28"
         >
-            <AnimatedHeader
+            <SectionHeader
+                index="04"
                 title="Projects"
-                subTitle="A snapshot of what I've been building."
-                text={`From agentic assistants and LLM-powered tools to deep learning\nand explainable AI — independent projects that reflect how I build:\npractical, reliable and thoughtfully engineered.`}
-                textColor="text-black"
+                count={projects.length}
+                label="Selected work"
+                text="From agentic assistants and LLM-powered tools to deep learning and explainable AI — independent projects that reflect how I build: practical, reliable and thoughtfully engineered."
             />
 
             <div ref={listRef} className="relative flex flex-col font-light"
@@ -175,6 +176,7 @@ const Projects = () => {
                         {...(project.href
                             ? { href: project.href, target: "_blank", rel: "noopener noreferrer" }
                             : { "aria-disabled": true })}
+                        data-cursor={project.href ? "open project" : "no public link"}
                         className={`project-row relative flex flex-col gap-1 py-4 sm:py-5 group md:gap-0 ${project.href ? "cursor-pointer" : "cursor-default"}`}
                         onMouseEnter={() => handleMouseEnter(index)}
                         onMouseLeave={() => handleMouseLeave(index)}

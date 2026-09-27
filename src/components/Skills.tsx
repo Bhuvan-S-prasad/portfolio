@@ -1,25 +1,13 @@
 import { useRef } from 'react'
 import { gsap, useGSAP } from '../lib/motion'
 import { skills } from '../content/skills'
+import SectionHeader from './UI/SectionHeader'
 
 const Skills = () => {
     const sectionRef = useRef<HTMLElement>(null)
-    const headerRef = useRef<HTMLDivElement>(null)
     const blockRefs = useRef<(HTMLDivElement | null)[]>([])
 
     useGSAP(() => {
-        // Header reveal
-        gsap.from(headerRef.current, {
-            opacity: 0,
-            y: 50,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 80%',
-            },
-        })
-
         // Per-block choreographed animation
         skills.forEach((_, index) => {
             const block = blockRefs.current[index]
@@ -71,17 +59,17 @@ const Skills = () => {
         <section
             ref={sectionRef}
             id="skills"
-            className="relative py-20 sm:py-28 md:py-36 lg:py-44 overflow-hidden bg-neutral-950"
+            className="relative pb-20 sm:pb-28 md:pb-36 lg:pb-44 overflow-hidden bg-neutral-950"
         >
-            {/* Header */}
-            <div ref={headerRef} className="px-6 sm:px-10 md:px-16 lg:px-24 mb-14 sm:mb-20 md:mb-28">
-                <p className="text-[10px] sm:text-xs md:text-sm tracking-[0.2rem] sm:tracking-[0.3rem] md:tracking-[0.5rem] uppercase text-white/40 mb-3 sm:mb-4">
-                    What I Work With
-                </p>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light text-white uppercase tracking-tight">
-                    Skills & Technologies
-                </h2>
-            </div>
+            <SectionHeader
+                variant="indexed"
+                tone="dark"
+                index="05"
+                label="What I work with"
+                title="Skills &"
+                accent="tools"
+                text="The languages, frameworks and platforms I use to take an idea from a notebook to a working tool."
+            />
 
             {/* Skills Grid */}
             <div className="px-6 sm:px-10 md:px-16 lg:px-24">

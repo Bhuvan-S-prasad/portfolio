@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { artworks as artworkData, type Artwork } from "../content/artworks";
 import { ScrollTrigger } from "../lib/motion";
+import { grainLayer } from "../lib/grain";
 
 const clamp = (v: number, min: number, max: number) =>
     Math.min(Math.max(v, min), max);
-
-const GRAIN =
-    "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E\")";
 
 /* ──────────────────────────────────────────────────────────────────────────
    DESKTOP GALLERY
@@ -30,7 +28,6 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
     // Per-frame values are written straight to the DOM; React only re-renders
     // when the active card changes or the end of the gallery is reached.
     const activeRef       = useRef(0);
-    const cursorDotRef    = useRef<HTMLDivElement>(null);
     const spotlightRef    = useRef<HTMLDivElement>(null);
     const progressBarRef  = useRef<HTMLDivElement>(null);
 
@@ -142,7 +139,6 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
 
     const onMouseMove = useCallback((e: React.MouseEvent) => {
         const at = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-        if (cursorDotRef.current) cursorDotRef.current.style.transform = at;
         if (spotlightRef.current) spotlightRef.current.style.transform = at;
     }, []);
 
@@ -160,16 +156,10 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                     height: "100vh",
                     background: "#080808",
                     overflow: "hidden",
-                    cursor: "none",
                 }}
             >
                 {/* grain */}
-                <div aria-hidden style={{
-                    position: "absolute", inset: 0,
-                    backgroundImage: GRAIN, backgroundSize: "256px 256px",
-                    opacity: 0.55, pointerEvents: "none", zIndex: 10,
-                    animation: "grainShift 0.12s steps(1) infinite",
-                }} />
+                <div aria-hidden style={{ ...grainLayer(0.55), zIndex: 10 }} />
 
                 {/* spotlight */}
                 <div ref={spotlightRef} aria-hidden style={{
@@ -179,17 +169,6 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                     transform: "translate(-999px, -999px)",
                     background: "radial-gradient(circle, rgba(207,163,85,0.12) 0%, rgba(207,163,85,0.04) 40%, transparent 68%)",
                     pointerEvents: "none", zIndex: 9, mixBlendMode: "screen",
-                }} />
-
-                {/* cursor dot */}
-                <div ref={cursorDotRef} aria-hidden style={{
-                    position: "fixed",
-                    left: 0, top: 0,
-                    width: 7, height: 7, borderRadius: "50%",
-                    background: "#cfa355",
-                    transform: "translate(-999px, -999px)",
-                    pointerEvents: "none", zIndex: 20,
-                    boxShadow: "0 0 10px rgba(207,163,85,0.85)",
                 }} />
 
                 {/* header — fixed to top-left, clear of image area */}
@@ -275,13 +254,6 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                 </div>
 
                 <style>{`
-                    @keyframes grainShift {
-                        0%   { background-position: 0 0; }
-                        25%  { background-position: -40px 20px; }
-                        50%  { background-position: 20px -30px; }
-                        75%  { background-position: -10px 40px; }
-                        100% { background-position: 0 0; }
-                    }
                     @keyframes revealLine {
                         from { transform: scaleX(0); }
                         to   { transform: scaleX(1); }
@@ -383,12 +355,7 @@ const MobileGallery = ({ artworks }: { artworks: Artwork[] }) => (
         background: "#080808", padding: "80px 0 100px",
         position: "relative", overflow: "hidden",
     }}>
-        <div aria-hidden style={{
-            position: "absolute", inset: 0,
-            backgroundImage: GRAIN, backgroundSize: "256px 256px",
-            opacity: 0.5, pointerEvents: "none",
-            animation: "mgrainShift 0.14s steps(1) infinite",
-        }} />
+        <div aria-hidden style={grainLayer(0.5)} />
 
         <div style={{ textAlign: "center", marginBottom: 64, position: "relative", zIndex: 2 }}>
             <p style={{
@@ -407,13 +374,6 @@ const MobileGallery = ({ artworks }: { artworks: Artwork[] }) => (
         </div>
 
         <style>{`
-            @keyframes mgrainShift {
-                0%   { background-position: 0 0; }
-                25%  { background-position: -40px 20px; }
-                50%  { background-position: 20px -30px; }
-                75%  { background-position: -10px 40px; }
-                100% { background-position: 0 0; }
-            }
             .mc-enter   { opacity: 0; transform: translateY(36px); }
             .mc-visible {
                 opacity: 1 !important; transform: translateY(0) !important;

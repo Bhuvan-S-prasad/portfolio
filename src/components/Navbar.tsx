@@ -3,10 +3,9 @@ import { useLenis } from "lenis/react";
 import { navItems } from "../content/navigation";
 import { profile, socials } from "../content/profile";
 import { gsap, useGSAP } from "../lib/motion";
-
-/* ── grain (same as Artworks section for cohesion) ── */
-const GRAIN =
-    "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='ng'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ng)' opacity='0.07'/%3E%3C/svg%3E\")";
+import { grainLayer } from "../lib/grain";
+import { confidenceFor } from "../lib/annotate";
+import DetectionBox from "./annotate/DetectionBox";
 
 const Navbar = () => {
     /* ── refs ── */
@@ -26,6 +25,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen]           = useState(false);
     const [showBtn, setShowBtn]         = useState(true);
     const [time, setTime]               = useState("");
+    const [preview, setPreview]         = useState(0);
 
     const lenis = useLenis();
 
@@ -185,12 +185,7 @@ const Navbar = () => {
                         height: "50%", background: "#080808", overflow: "hidden",
                     }}
                 >
-                    <div aria-hidden style={{
-                        position: "absolute", inset: 0,
-                        backgroundImage: GRAIN, backgroundSize: "256px 256px",
-                        opacity: 0.6, pointerEvents: "none",
-                        animation: "navGrain 0.13s steps(1) infinite",
-                    }} />
+                    <div aria-hidden style={grainLayer(0.6)} />
 
                 </div>
 
@@ -202,12 +197,7 @@ const Navbar = () => {
                         height: "50%", background: "#080808", overflow: "hidden",
                     }}
                 >
-                    <div aria-hidden style={{
-                        position: "absolute", inset: 0,
-                        backgroundImage: GRAIN, backgroundSize: "256px 256px",
-                        opacity: 0.6, pointerEvents: "none",
-                        animation: "navGrain 0.13s steps(1) infinite",
-                    }} />
+                    <div aria-hidden style={grainLayer(0.6)} />
                 </div>
 
                 {/* ── Content layer (sits above both panels) ── */}
@@ -228,15 +218,14 @@ const Navbar = () => {
                         display: "flex", justifyContent: "space-between", alignItems: "flex-end",
                     }}>
                         <span style={{
-                            color: "rgba(255,255,255,0.28)", fontSize: 10,
-                            letterSpacing: "0.42em", textTransform: "uppercase",
-                            fontFamily: "inherit",
+                            color: "rgba(255,255,255,0.35)", fontSize: 11,
+                            textTransform: "uppercase", fontFamily: "var(--font-mono)", letterSpacing: "0.14em",
                         }}>
                             Portfolio — Navigation
                         </span>
                         <span style={{
-                            color: "rgba(255,255,255,0.28)", fontSize: 10,
-                            letterSpacing: "0.35em", fontVariantNumeric: "tabular-nums",
+                            color: "rgba(255,255,255,0.35)", fontSize: 11,
+                            fontVariantNumeric: "tabular-nums", fontFamily: "var(--font-mono)", letterSpacing: "0.14em",
                         }}>
                             {time}
                         </span>
@@ -244,6 +233,7 @@ const Navbar = () => {
 
                     {/* nav links — centered vertically with generous padding */}
                     <div style={{
+                        position: "relative",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
@@ -264,6 +254,9 @@ const Navbar = () => {
                                     >
                                         <button
                                             onClick={() => handleNavClick(item.href)}
+                                            onMouseEnter={() => setPreview(i)}
+                                            onFocus={() => setPreview(i)}
+                                            data-cursor="go to"
                                             style={{
                                                 display: "flex",
                                                 alignItems: "baseline",
@@ -279,7 +272,8 @@ const Navbar = () => {
                                             <span style={{
                                                 color: "#cfa355",
                                                 fontSize: "clamp(10px, 1vw, 13px)",
-                                                letterSpacing: "0.3em",
+                                                fontFamily: "var(--font-mono)",
+                                                letterSpacing: "0.1em",
                                                 fontVariantNumeric: "tabular-nums",
                                                 marginBottom: "0.15em",
                                                 flexShrink: 0,
@@ -290,7 +284,7 @@ const Navbar = () => {
                                             <span style={{
                                                 color: "rgba(255,255,255,0.45)",
                                                 fontSize: "clamp(2rem, 6.8vh, 6.2rem)",
-                                                fontWeight: 500,
+                                                fontWeight: 300,
                                                 letterSpacing: "-0.02em",
                                                 textTransform: "uppercase",
                                                 lineHeight: 1.05,
@@ -305,6 +299,40 @@ const Navbar = () => {
                                 ))}
                             </ul>
                         </nav>
+
+                        {/* live preview of the hovered / focused section */}
+                        <div aria-hidden className="pointer-events-none absolute right-0 top-1/2 hidden md:block w-[clamp(260px,30vw,460px)] aspect-4/3 -translate-y-1/2">
+                            <DetectionBox
+                                className="-inset-3 z-10"
+                                label={navItems[preview].name.toLowerCase()}
+                                confidence={confidenceFor(navItems[preview].name)}
+                            />
+                            {navItems.map((item, i) => (
+                                <div
+                                    key={item.name}
+                                    className={`absolute inset-0 overflow-hidden border border-white/10 bg-white/3
+                                        transition-[clip-path,opacity] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+                                        ${i === preview ? "opacity-100 [clip-path:inset(0_0_0_0)]" : "opacity-0 [clip-path:inset(100%_0_0_0)]"}`}
+                                >
+                                    {item.preview.image && (
+                                        <img
+                                            src={item.preview.image}
+                                            alt=""
+                                            loading="lazy"
+                                            className="size-full object-cover object-top opacity-70"
+                                        />
+                                    )}
+                                    <div className="absolute inset-x-0 bottom-0 p-5 lg:p-6 bg-linear-to-t from-black via-black/80 to-transparent pt-16">
+                                        <p className="font-serif italic text-2xl lg:text-3xl leading-tight text-white">
+                                            {item.preview.line}
+                                        </p>
+                                        <p className="mt-2 font-mono text-[11px] tracking-[0.08em] text-white/50">
+                                            {item.preview.meta}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     {/* bottom meta row */}
@@ -318,14 +346,15 @@ const Navbar = () => {
                         {/* email */}
                         <div>
                             <p style={{
-                                color: "rgba(255,255,255,0.3)", fontSize: 9,
-                                letterSpacing: "0.42em", textTransform: "uppercase",
-                                margin: "0 0 5px",
+                                color: "rgba(255,255,255,0.35)", fontSize: 10,
+                                textTransform: "uppercase", fontFamily: "var(--font-mono)", letterSpacing: "0.14em",
+                                margin: "0 0 6px",
                             }}>
                                 E-mail
                             </p>
                             <a
                                 href={`mailto:${profile.email}`}
+                                data-cursor="email"
                                 style={{
                                     color: "rgba(255,255,255,0.65)", fontSize: 13,
                                     letterSpacing: "0.18em", textDecoration: "none",
@@ -340,9 +369,9 @@ const Navbar = () => {
                         {/* socials */}
                         <div style={{ textAlign: "right" }}>
                             <p style={{
-                                color: "rgba(255,255,255,0.3)", fontSize: 9,
-                                letterSpacing: "0.42em", textTransform: "uppercase",
-                                margin: "0 0 5px",
+                                color: "rgba(255,255,255,0.35)", fontSize: 10,
+                                textTransform: "uppercase", fontFamily: "var(--font-mono)", letterSpacing: "0.14em",
+                                margin: "0 0 6px",
                             }}>
                                 Social
                             </p>
@@ -351,6 +380,7 @@ const Navbar = () => {
                                     <a
                                         key={i} href={s.href}
                                         target="_blank" rel="noopener noreferrer"
+                                        data-cursor={s.name.toLowerCase()}
                                         style={{
                                             color: "rgba(255,255,255,0.55)", fontSize: 10,
                                             letterSpacing: "0.35em", textTransform: "uppercase",
@@ -371,6 +401,7 @@ const Navbar = () => {
             <button
                 ref={toggleBtnRef}
                 onClick={toggle}
+                data-cursor={isOpen ? "close" : "menu"}
                 aria-label={isOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isOpen}
                 style={{

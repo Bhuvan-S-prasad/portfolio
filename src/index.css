@@ -38,6 +38,12 @@ body {
     color: var(--color-ink);
 }
 
+/* The custom cursor (components/UI/Cursor) replaces the native one when mounted. */
+html.has-cursor,
+html.has-cursor * {
+    cursor: none !important;
+}
+
 :focus-visible {
     outline: 1px solid var(--color-gold);
     outline-offset: 4px;

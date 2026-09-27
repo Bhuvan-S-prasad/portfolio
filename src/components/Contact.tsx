@@ -118,6 +118,7 @@ const Contact = () => {
                         <a
                             ref={emailRef}
                             href={`mailto:${profile.email}`}
+                            data-cursor="say hello"
                             onMouseMove={handleEmailHover}
                             onMouseLeave={handleEmailLeave}
                             className="group inline-block text-lg sm:text-2xl md:text-3xl lg:text-4xl text-white lowercase tracking-wide 
@@ -152,6 +153,7 @@ const Contact = () => {
                                         href={social.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        data-cursor={social.name.toLowerCase()}
                                         className="group relative text-base sm:text-lg uppercase tracking-wider sm:tracking-widest text-white/70 hover:text-white transition-colors duration-300"
                                     >
                                         {social.name}

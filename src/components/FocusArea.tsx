@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import { focusAreas } from "../content/expertise"
-import AnimatedHeader from "./UI/AnimatedHeader"
+import SectionHeader from "./UI/SectionHeader"
 import { gsap, useGSAP } from "../lib/motion"
 
 const FocusArea = () => {
@@ -99,13 +99,15 @@ const FocusArea = () => {
     }, [])
 
     return (
-        <section id="expertise" className="min-h-screen bg-black rounded-t-4xl">
-            <AnimatedHeader
-                title="Expertise"
-                subTitle="What drives my work"
-                text={"My work spans efficiency-focused AI tooling, agentic systems,\nLLM-powered applications and explainable deep learning —\nbuilt for reliability and real-world impact."}
-                textColor="text-white"
-                withScrollTrigger={true}
+        <section id="expertise" className="min-h-screen">
+            <SectionHeader
+                variant="indexed"
+                tone="dark"
+                index="03"
+                label="Expertise"
+                title="What I"
+                accent="focus on"
+                text="My work spans efficiency-focused AI tooling, agentic systems, LLM-powered applications and explainable deep learning — built for reliability and real-world impact."
             />
 
             {/* Editorial numbered list */}

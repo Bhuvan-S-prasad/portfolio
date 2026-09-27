@@ -4,6 +4,8 @@ import Skills from "./components/Skills"
 import FocusArea from "./components/FocusArea"
 import Preloader from "./components/UI/Preloader"
 import SmoothScroll from "./components/UI/SmoothScroll"
+import Chapter from "./components/UI/Chapter"
+import Cursor from "./components/UI/Cursor"
 import About from "./components/About"
 import Projects from "./components/Projects"
 import Artworks from "./components/Artworks"
@@ -17,16 +19,29 @@ function App() {
   return (
     <SmoothScroll>
       <Preloader onComplete={() => setReady(true)} />
+      <Cursor />
       <Navbar />
       <main className="relative w-full min-h-screen overflow-x-clip">
         <Hero ready={ready} />
-        <About />
-        <FocusArea />
+
+        {/* About + Expertise share one dark surface, so they transition as one chapter. */}
+        <Chapter enter exit className="bg-black">
+          <About />
+          <FocusArea />
+        </Chapter>
+
         <Projects />
-        <Skills />
+
+        <Chapter enter>
+          <Skills />
+        </Chapter>
+
         <Artworks />
         <ContactMe />
-        <Contact />
+
+        <Chapter enter className="bg-black">
+          <Contact />
+        </Chapter>
       </main>
     </SmoothScroll>
   )

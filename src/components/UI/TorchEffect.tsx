@@ -57,7 +57,7 @@ const TorchEffect = ({ text }: TorchEffectProps) => {
     }, []);
 
     return (
-        <div ref={containerRef} className="relative overflow-hidden rounded-b-4xl">
+        <div ref={containerRef} className="relative overflow-hidden">
             <div className="flex relative px-10 md:px-20 py-20">
                 <p className="text-2xl md:text-4xl lg:text-5xl font-medium tracking-wide text-white leading-relaxed">
                     {text}
