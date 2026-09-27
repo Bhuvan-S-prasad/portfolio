@@ -1,9 +1,5 @@
-import { SplitText } from "gsap/SplitText";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef } from "react";
-
-gsap.registerPlugin(ScrollTrigger, SplitText);
+import { gsap, ScrollTrigger, SplitText } from "../lib/motion";
 
 interface SplitResult {
     chars: HTMLElement[];
@@ -19,7 +15,7 @@ const ContactMe = () => {
             const mm = gsap.matchMedia();
 
             mm.add("(min-width: 768px)", () => {
-                const titleHeadings = gsap.utils.toArray<HTMLElement>(".contact-title h1");
+                const titleHeadings = gsap.utils.toArray<HTMLElement>(".contact-title h2");
                 const splits: SplitResult[] = [];
 
                 titleHeadings.forEach((heading) => {
@@ -117,20 +113,20 @@ const ContactMe = () => {
         >
             <div className="hidden md:flex contact-title h-[85svh] items-center">
                 <div className="contact-title-container relative w-full flex items-center will-change-transform">
-                    <h1 className="text-6xl lg:text-8xl xl:text-[10rem] font-medium leading-none tracking-[-0.15rem] lg:tracking-[-0.25rem]">
+                    <h2 className="text-6xl lg:text-8xl xl:text-[10rem] font-medium leading-none tracking-[-0.15rem] lg:tracking-[-0.25rem]">
                         Contact Me
-                    </h1>
+                    </h2>
                 </div>
             </div>
 
             <div className="flex md:hidden h-[50svh] items-center justify-center">
-                <h1
+                <h2
                     ref={mobileTextRef}
                     className="text-4xl sm:text-5xl font-medium leading-tight tracking-tight text-center"
                 >
                     Let's Work<br />
                     <span className="text-black/60">Together</span>
-                </h1>
+                </h2>
             </div>
         </section>
     );

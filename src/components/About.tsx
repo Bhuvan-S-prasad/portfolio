@@ -1,44 +1,45 @@
+import { useRef } from "react"
 import AnimatedHeader from "./UI/AnimatedHeader"
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
 import TorchEffect from "./UI/TorchEffect"
-
-const aboutText = "I'm a final-year Computer Science (AI) student focused on deep learning, computer vision, and LLM-based systems. I build practical, explainable AI solutions—ranging from medical imaging models to RAG-powered applications—using PyTorch, with an emphasis on reliability, interpretability, and real-world impact."
+import { gsap, useGSAP } from "../lib/motion"
+import { profile } from "../content/profile"
 
 const About = () => {
+    const sectionRef = useRef<HTMLElement>(null)
+
     useGSAP(() => {
-        gsap.to("#about", {
+        gsap.to(sectionRef.current, {
             scale: 0.95,
             scrollTrigger: {
-                trigger: "#about",
+                trigger: sectionRef.current,
                 start: "bottom 80%",
                 end: "bottom 20%",
                 scrub: true,
             },
             ease: "power1.out",
         });
-    })
+    }, { scope: sectionRef })
 
     return (
-        <section id="about"
+        <section id="about" ref={sectionRef}
             className="min-h-screen bg-black rounded-b-4xl"
         >
             <AnimatedHeader
                 title="About Me"
                 subTitle="Who Am I?"
-                text={`passionate about building AI systems that are not only accurate,\n but also explainable, reliable, and impactful in real-world\n applications—especially in healthcare and LLM-powered systems.`}
+                text={profile.about.heading}
                 textColor="text-white"
                 withScrollTrigger={true}
             />
             <div className="flex flex-col items-center justify-center rounded-b-4xl">
                 <div className="block md:hidden px-5 sm:px-8 py-12 sm:py-16">
-                    <p className="text-lg sm:text-xl font-light tracking-wide text-white/90 leading-relaxed text-justify">
-                        {aboutText}
+                    <p className="text-lg sm:text-xl font-light tracking-wide text-white/90 leading-relaxed">
+                        {profile.about.body}
                     </p>
                 </div>
 
                 <div className="hidden md:block">
-                    <TorchEffect text={aboutText} />
+                    <TorchEffect text={profile.about.body} />
                 </div>
             </div>
         </section>

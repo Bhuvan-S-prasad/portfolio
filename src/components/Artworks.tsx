@@ -1,16 +1,6 @@
-"use client";
-
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Artworks as ArtworkData } from "../constants/Index";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
-
-interface Artwork {
-    name: string;
-    image: string;
-}
+import { artworks as artworkData, type Artwork } from "../content/artworks";
+import { ScrollTrigger } from "../lib/motion";
 
 const clamp = (v: number, min: number, max: number) =>
     Math.min(Math.max(v, min), max);
@@ -37,10 +27,16 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
     const targetXRef      = useRef(0);
     const outerHeightRef  = useRef(0); // set after first render + measure
 
+    // Per-frame values are written straight to the DOM; React only re-renders
+    // when the active card changes or the end of the gallery is reached.
+    const activeRef       = useRef(0);
+    const cursorDotRef    = useRef<HTMLDivElement>(null);
+    const spotlightRef    = useRef<HTMLDivElement>(null);
+    const progressBarRef  = useRef<HTMLDivElement>(null);
+
     const [activeIndex, setActiveIndex] = useState(0);
-    const [cursorPos, setCursorPos]     = useState({ x: -999, y: -999 });
     const [isReady, setIsReady]         = useState(false);
-    const [progress, setProgress]       = useState(0);
+    const [nearEnd, setNearEnd]         = useState(false);
 
     /* ── Measure & set outer height after paint ── */
     useEffect(() => {
@@ -107,7 +103,8 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
             const minX = firstCx - window.innerWidth / 2;
             const maxX = lastCx  - window.innerWidth / 2;
             targetXRef.current = minX + p * (maxX - minX);
-            setProgress(p);
+            if (progressBarRef.current) progressBarRef.current.style.width = `${p * 100}%`;
+            setNearEnd(p >= 0.97);
         };
 
         window.addEventListener("scroll", onScroll, { passive: true });
@@ -126,7 +123,10 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                     const d  = Math.abs(cx - screenCx);
                     if (d < bestDist) { bestDist = d; best = i; }
                 });
-                setActiveIndex(best);
+                if (best !== activeRef.current) {
+                    activeRef.current = best;
+                    setActiveIndex(best);
+                }
             }
             rafRef.current = requestAnimationFrame(tick);
         };
@@ -141,7 +141,9 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
     }, [artworks.length]);
 
     const onMouseMove = useCallback((e: React.MouseEvent) => {
-        setCursorPos({ x: e.clientX, y: e.clientY });
+        const at = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+        if (cursorDotRef.current) cursorDotRef.current.style.transform = at;
+        if (spotlightRef.current) spotlightRef.current.style.transform = at;
     }, []);
 
     return (
@@ -170,22 +172,22 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                 }} />
 
                 {/* spotlight */}
-                <div aria-hidden style={{
+                <div ref={spotlightRef} aria-hidden style={{
                     position: "fixed",
-                    left: cursorPos.x, top: cursorPos.y,
+                    left: 0, top: 0,
                     width: 420, height: 420,
-                    transform: "translate(-50%,-50%)",
+                    transform: "translate(-999px, -999px)",
                     background: "radial-gradient(circle, rgba(207,163,85,0.12) 0%, rgba(207,163,85,0.04) 40%, transparent 68%)",
                     pointerEvents: "none", zIndex: 9, mixBlendMode: "screen",
                 }} />
 
                 {/* cursor dot */}
-                <div aria-hidden style={{
+                <div ref={cursorDotRef} aria-hidden style={{
                     position: "fixed",
-                    left: cursorPos.x, top: cursorPos.y,
+                    left: 0, top: 0,
                     width: 7, height: 7, borderRadius: "50%",
                     background: "#cfa355",
-                    transform: "translate(-50%,-50%)",
+                    transform: "translate(-999px, -999px)",
                     pointerEvents: "none", zIndex: 20,
                     boxShadow: "0 0 10px rgba(207,163,85,0.85)",
                 }} />
@@ -208,9 +210,9 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                 </div>
 
                 {/* progress bar */}
-                <div style={{
+                <div ref={progressBarRef} style={{
                     position: "absolute", top: 0, left: 0,
-                    width: `${progress * 100}%`, height: 1,
+                    width: 0, height: 1,
                     background: "linear-gradient(to right, transparent, #cfa355 60%)",
                     zIndex: 15, opacity: isReady ? 1 : 0,
                     transition: "width 0.06s linear",
@@ -234,7 +236,7 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
                 <div style={{
                     position: "absolute", bottom: 36, right: 52, zIndex: 15,
                     display: "flex", alignItems: "center", gap: 10,
-                    opacity: isReady && progress < 0.97 ? 0.38 : 0,
+                    opacity: isReady && !nearEnd ? 0.38 : 0,
                     transition: "opacity 0.5s",
                 }}>
                     <span style={{
@@ -514,8 +516,8 @@ const Artworks = () => {
     }, []);
 
     return isMobile
-        ? <MobileGallery artworks={ArtworkData} />
-        : <DesktopGallery artworks={ArtworkData} />;
+        ? <MobileGallery artworks={artworkData} />
+        : <DesktopGallery artworks={artworkData} />;
 };
 
 export default Artworks;

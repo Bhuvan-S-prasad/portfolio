@@ -1,7 +1,6 @@
 import { useRef, useEffect } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { useLenis } from "lenis/react";
+import { gsap, useGSAP } from "../../lib/motion";
 
 interface PreloaderProps {
     onComplete?: () => void;
@@ -9,21 +8,33 @@ interface PreloaderProps {
 
 const Preloader = ({ onComplete }: PreloaderProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const textRef = useRef<HTMLHeadingElement>(null);
+    const textRef = useRef<HTMLParagraphElement>(null);
+    const doneRef = useRef(false);
+    const onCompleteRef = useRef(onComplete);
     const lenis = useLenis();
-    const lenisRef = useRef(lenis);
 
+    useEffect(() => {
+        onCompleteRef.current = onComplete;
+    }, [onComplete]);
+
+    // Lenis is created a frame after mount, so lock scrolling whenever it
+    // appears while the preloader is still running.
+    useEffect(() => {
+        if (lenis && !doneRef.current) lenis.stop();
+    }, [lenis]);
+
+    const lenisRef = useRef(lenis);
     useEffect(() => {
         lenisRef.current = lenis;
     }, [lenis]);
 
     useGSAP(() => {
-        lenisRef.current?.stop();
-
         const tl = gsap.timeline({
             onComplete: () => {
+                doneRef.current = true;
                 lenisRef.current?.start();
-                onComplete?.();
+                gsap.set(containerRef.current, { display: "none" });
+                onCompleteRef.current?.();
             },
         });
 
@@ -48,20 +59,20 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
             duration: 0.5,
             ease: "power3.inOut",
         });
-
     }, []);
 
     return (
         <div
             ref={containerRef}
+            aria-hidden
             className="fixed inset-0 z-100 flex items-center justify-center bg-black"
         >
-            <h1
+            <p
                 ref={textRef}
                 className="text-3xl font-bold tracking-widest text-white uppercase md:text-5xl lg:text-7xl"
             >
                 Welcome to my portfolio
-            </h1>
+            </p>
         </div>
     );
 };

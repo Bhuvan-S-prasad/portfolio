@@ -1,12 +1,12 @@
 import { ArrowUpRight } from "lucide-react"
-import { projects } from "../constants/Index"
+import { projects } from "../content/projects"
 import AnimatedHeader from "./UI/AnimatedHeader"
 import { useRef, useState } from "react"
-import gsap from "gsap"
-import { useGSAP } from "@gsap/react"
+import { gsap, useGSAP } from "../lib/motion"
 
 const Projects = () => {
 
+    const listRef = useRef<HTMLDivElement>(null);
     const previewRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<(HTMLDivElement | null)[]>([]);
     const descriptionRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -45,7 +45,7 @@ const Projects = () => {
             }
         });
 
-        gsap.from("#project", {
+        gsap.from(".project-row", {
             y: 100,
             opacity: 0,
             delay: 0.5,
@@ -53,11 +53,11 @@ const Projects = () => {
             ease: "back.out",
             stagger: 0.1,
             scrollTrigger: {
-                trigger: "#project"
+                trigger: listRef.current
             }
         })
 
-    })
+    }, { scope: listRef })
 
     const handleMouseEnter = (index: number) => {
         if (window.innerWidth < 768) return;
@@ -161,21 +161,21 @@ const Projects = () => {
             <AnimatedHeader
                 title="Projects"
                 subTitle="A snapshot of what I've been building."
-                text={`From deep learning and computer vision to explainable AI\n and LLM-powered systems, these projects reflect my approach\n to building practical, reliable, and thoughtfully engineered solutions.`}
+                text={`From agentic assistants and LLM-powered tools to deep learning\nand explainable AI — independent projects that reflect how I build:\npractical, reliable and thoughtfully engineered.`}
                 textColor="text-black"
             />
 
-            <div className="relative flex flex-col font-light"
+            <div ref={listRef} className="relative flex flex-col font-light"
                 onMouseMove={(e) => handleMouseMove(e)}
             >
                 {projects.map((project, index) => (
                     <a
                         key={project.id}
-                        id="project"
-                        href={project.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative flex flex-col gap-1 py-4 sm:py-5 cursor-pointer group md:gap-0"
+                        // Projects without a public link stay as plain, non-navigating rows.
+                        {...(project.href
+                            ? { href: project.href, target: "_blank", rel: "noopener noreferrer" }
+                            : { "aria-disabled": true })}
+                        className={`project-row relative flex flex-col gap-1 py-4 sm:py-5 group md:gap-0 ${project.href ? "cursor-pointer" : "cursor-default"}`}
                         onMouseEnter={() => handleMouseEnter(index)}
                         onMouseLeave={() => handleMouseLeave(index)}
                     >
@@ -183,11 +183,11 @@ const Projects = () => {
                         <div ref={(el) => { overlayRef.current[index] = el }}
                             className="absolute inset-0 hidden md:block duration-200 bg-black -z-10 clip-path" />
 
-                        <div className="flex justify-between px-5 sm:px-10 text-black transition-all duration-5000 md:group-hover:px-12 md:group-hover:text-white">
-                            <h2 className="text-xl sm:text-2xl lg:text-[32px] leading-none font-light">
+                        <div className="flex justify-between px-5 sm:px-10 text-black transition-all duration-500 md:group-hover:px-12 md:group-hover:text-white">
+                            <h3 className="text-xl sm:text-2xl lg:text-[32px] leading-none font-light">
                                 {project.name}
-                            </h2>
-                            <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </h3>
+                            {project.href && <ArrowUpRight aria-hidden className="w-5 h-5 sm:w-6 sm:h-6" />}
                         </div>
 
                         <div className="w-full h-px sm:h-0.5 bg-black/60 sm:bg-black/80" />
@@ -204,10 +204,10 @@ const Projects = () => {
                         <div className="flex flex-wrap px-5 sm:px-10 text-[10px] sm:text-xs md:text-sm leading-loose uppercase transition-all duration-500 gap-x-3 sm:gap-x-5 md:group-hover:px-12">
                             {project.frameworks.map((framework) => (
                                 <p
-                                    key={framework.id}
+                                    key={framework}
                                     className="text-black/70 sm:text-black transition-colors duration-500 md:group-hover:text-white"
                                 >
-                                    {framework.name}
+                                    {framework}
                                 </p>
                             ))}
                         </div>
@@ -231,9 +231,9 @@ const Projects = () => {
                 ))}
 
 
-                <div ref={previewRef} className="fixed -top-2/6 left-0 z-50 overflow-hidden border-8 vorder-black pointer-events-none w-[960px] md:block hidden">
+                <div ref={previewRef} className="fixed -top-2/6 left-0 z-50 overflow-hidden border-8 border-black pointer-events-none w-[960px] md:block hidden">
                     {currentIndex !== null && (
-                        <img src={projects[currentIndex].bgImage} alt={projects[currentIndex].name} className="w-full h-full object-cover" />
+                        <img src={projects[currentIndex].image} alt={projects[currentIndex].name} className="w-full h-full object-cover" />
                     )}
                 </div>
             </div>

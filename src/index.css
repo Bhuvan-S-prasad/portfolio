@@ -1,16 +1,46 @@
 @import "tailwindcss";
-
-body {
-    background: #e5e5e0;
-    color: black;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-    font-family: var(--font-amiamie);
-}
+@import "lenis/dist/lenis.css";
 
 @theme {
-    --color-gold: #cfa355;
+    /* Palette */
+    --color-bone: #e5e5e0;
     --color-background: #e5e5e0;
+    --color-ink: #080808;
+    --color-gold: #cfa355;
+    --color-ember: #c8553d;
+
+    /* Type — sans for everything, serif italic for accents, mono for labels */
+    --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+    --font-mono: "Geist Mono Variable", ui-monospace, "SFMono-Regular", monospace;
+}
+
+:root {
+    /* Attention / bottleneck heat: bone → gold → ember */
+    --heat-gradient: linear-gradient(90deg, var(--color-bone), var(--color-gold) 55%, var(--color-ember));
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    background: var(--color-bone);
+    color: black;
+    overflow-x: hidden;
+    font-family: var(--font-sans);
+}
+
+::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+}
+
+:focus-visible {
+    outline: 1px solid var(--color-gold);
+    outline-offset: 4px;
 }
 
 /* ── Navbar custom styles ── */
@@ -22,7 +52,8 @@ body {
     100% { background-position: 0 0; }
 }
 
-.nav-link-btn:hover .nav-link-text {
+.nav-link-btn:hover .nav-link-text,
+.nav-link-btn:focus-visible .nav-link-text {
     color: rgba(255,255,255,1) !important;
     letter-spacing: 0em !important;
 }
@@ -37,7 +68,15 @@ body {
 
 @media (max-width: 767px) {
     .nav-link-btn span:last-child {
-        font-size: clamp(2.4rem, 14vw, 4rem) !important;
+        font-size: clamp(2.4rem, 12vw, 4rem) !important;
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
