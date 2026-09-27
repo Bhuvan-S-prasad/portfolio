@@ -7,6 +7,7 @@ import SmoothScroll from "./components/UI/SmoothScroll"
 import Chapter from "./components/UI/Chapter"
 import Cursor from "./components/UI/Cursor"
 import About from "./components/About"
+import Approach from "./components/Approach"
 import Projects from "./components/Projects"
 import Artworks from "./components/Artworks"
 import ContactMe from "./components/ContactMe"
@@ -30,6 +31,7 @@ function App() {
           <FocusArea />
         </Chapter>
 
+        <Approach />
         <Projects />
 
         <Chapter enter>

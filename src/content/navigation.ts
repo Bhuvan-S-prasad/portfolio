@@ -33,6 +33,11 @@ export const navItems: NavItem[] = [
         preview: { line: focusAreas[0].title, meta: `${focusAreas.length} focus areas` },
     },
     {
+        name: "Approach",
+        href: "#approach",
+        preview: { line: "Find the bottleneck.", meta: "observe · measure · identify · architect" },
+    },
+    {
         name: "Projects",
         href: "#projects",
         preview: { line: projects[0].name, meta: `${projects.length} projects`, image: projects[0].image },
