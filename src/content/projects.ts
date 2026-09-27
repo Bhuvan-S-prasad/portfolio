@@ -8,6 +8,8 @@ export type Project = {
     href: string;
     image: string;
     frameworks: string[];
+    /** Short mono label shown above the frame. */
+    category: string;
     /** Which code-built demo the case file shows. */
     demo: DemoKind;
     caseFile: {
@@ -29,6 +31,7 @@ export const projects: Project[] = [
         href: "https://github.com/Bhuvan-S-prasad/Auto-Mat",
         image: `${IMG}/Screenshot%202026-06-01%20104509.png`,
         frameworks: ["Agentic AI", "Multi-Agent Systems", "Context Engineering", "RAG", "Vector Databases", "Next.js", "TypeScript"],
+        category: "agentic ai",
         demo: "agent",
         caseFile: {
             tagline: "An agent that does the busywork — and asks before it acts.",
@@ -45,6 +48,7 @@ export const projects: Project[] = [
         href: "https://github.com/Bhuvan-S-prasad/BrainScan-org",
         image: `${IMG}/brainTumor.png`,
         frameworks: ["Deep Learning", "PyTorch", "Explainable AI", "RAG", "Flask"],
+        category: "medical imaging · xai",
         demo: "ensemble",
         caseFile: {
             tagline: "Three models, one explainable verdict.",
@@ -61,6 +65,7 @@ export const projects: Project[] = [
         href: "",
         image: `${IMG}/Nomi.png`,
         frameworks: ["React", "Next.js", "PostgreSQL", "Node.js", "Clerk", "TailwindCSS", "Gemini"],
+        category: "cited search",
         demo: "citations",
         caseFile: {
             tagline: "Search that shows its sources.",
@@ -77,6 +82,7 @@ export const projects: Project[] = [
         href: "https://rotom-five.vercel.app/",
         image: `${IMG}/rotom.png`,
         frameworks: ["React", "Next.js", "PostgreSQL", "Node.js", "Better Auth", "TailwindCSS", "Mistral AI"],
+        category: "generative ui",
         demo: "mockup",
         caseFile: {
             tagline: "From a sentence to a published prototype.",
@@ -93,6 +99,7 @@ export const projects: Project[] = [
         href: "",
         image: `${IMG}/blood.png`,
         frameworks: ["Deep Learning", "PyTorch", "DenseNet121", "ResNet50", "Grad-CAM", "Flask"],
+        category: "medical imaging · xai",
         demo: "cells",
         caseFile: {
             tagline: "Eight cell types, and the reason for each call.",
@@ -109,6 +116,7 @@ export const projects: Project[] = [
         href: "",
         image: `${IMG}/bird.png`,
         frameworks: ["Deep Learning", "PyTorch", "ResNet50", "Transfer Learning", "Flask"],
+        category: "computer vision",
         demo: "finetune",
         caseFile: {
             tagline: "Transfer learning, tuned down to the species.",
@@ -125,6 +133,7 @@ export const projects: Project[] = [
         href: "https://rivora-psi.vercel.app/",
         image: `${IMG}/rivora.png`,
         frameworks: ["React", "Next.js", "MongoDB", "Node.js", "Clerk"],
+        category: "full-stack social",
         demo: "thread",
         caseFile: {
             tagline: "A social app built for conversations, not scrolling.",

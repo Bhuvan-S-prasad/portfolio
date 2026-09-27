@@ -54,6 +54,20 @@ html.has-cursor * {
     to   { opacity: 1; }
 }
 
+/* Projects stage: frames fade out softly as they slide behind the index. */
+@media (min-width: 768px) {
+    .stage-mask {
+        -webkit-mask-image: linear-gradient(to right, transparent 0, black 7vw);
+        mask-image: linear-gradient(to right, transparent 0, black 7vw);
+    }
+}
+
+/* A small horizontal "go this way" hint. */
+@keyframes nudge {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(5px); }
+}
+
 /* TraceLog lines typed in one after another once `.is-on` is set. */
 .trace-reveal [data-trace-line] {
     opacity: 0;
