@@ -33,19 +33,42 @@ const path = (fn: (x: number) => number) =>
 const SMOOTH = path(capability)
 const RAW = path((x) => capability(x) + noise(x))
 
+/** Side-view airliner, nose to the right, drawn in a 48×18 box. */
+const Plane = () => (
+    <svg viewBox="0 0 48 18" className="block h-6 w-16 overflow-visible drop-shadow-[0_0_12px_rgb(207_163_85/0.5)] sm:h-7.5 sm:w-20" aria-hidden>
+        <g fill="var(--color-gold)">
+            {/* tail fin + tailplane */}
+            <path d="M3.2 8.6 L1.4 2.2 Q1.3 1.6 2 1.6 L4.6 1.6 Q5.2 1.6 5.6 2.1 L10.4 8.2 Z" />
+            <path d="M3.6 10.6 L0.9 13.1 Q0.6 13.6 1.2 13.6 L3.3 13.6 L8.6 10.6 Z" />
+            {/* fuselage */}
+            <path d="M2.4 10 C2.4 8.7 4 8.1 7.8 8.1 L38.5 8.1 C43.2 8.1 46.1 9 47.3 10 C46.1 11 43.2 11.9 38.5 11.9 L7.8 11.9 C4 11.9 2.4 11.3 2.4 10 Z" />
+            {/* wing */}
+            <path d="M19.2 10.6 L13.6 16.4 Q13.3 16.9 13.9 16.9 L17.2 16.9 Q17.9 16.9 18.3 16.4 L27.8 10.6 Z" />
+        </g>
+        {/* cabin windows + cockpit */}
+        <g fill="var(--color-ink)" opacity="0.55">
+            {[12, 15, 18, 21, 24, 27, 30, 33, 36].map((x) => <rect key={x} x={x} y="9" width="1.3" height="1.1" rx="0.4" />)}
+            <path d="M41.6 9.1 L44.4 9.4 L43.6 10.1 L41.6 10.1 Z" />
+        </g>
+    </svg>
+)
+
 const pct = (x: number) => `${x * 100}%`
 const topPct = (x: number) => `${(toY(capability(x)) / H) * 100}%`
 
 /**
  * "Trajectory" — degree → projects → AI Engineer, told as a training run.
- * The curve draws with scroll; each checkpoint lights up as the run passes it.
- * The lift at the end is the section's one nod to aerospace.
+ * The curve draws with scroll, flown by a small plane whose contrail is the
+ * curve itself; each checkpoint lights up as the run passes it, and the plane
+ * pitches up and climbs out at the end — the section's nod to aerospace.
  */
 const Trajectory = () => {
     const blockRef = useRef<HTMLDivElement>(null)
     const clipRef = useRef<SVGRectElement>(null)
     const tipRef = useRef<HTMLDivElement>(null)
     const readoutRef = useRef<HTMLSpanElement>(null)
+    const planeRef = useRef<HTMLDivElement>(null)
+    const chartRef = useRef<HTMLDivElement>(null)
 
     useGSAP(() => {
         const block = blockRef.current
@@ -58,9 +81,20 @@ const Trajectory = () => {
             if (tipRef.current) {
                 tipRef.current.style.left = pct(x)
                 tipRef.current.style.top = topPct(x)
-                tipRef.current.style.opacity = x > 0.005 && x < 0.995 ? "1" : "0"
+                tipRef.current.style.opacity = x > 0.005 ? "1" : "0"
+            }
+            // Pitch the plane to the curve's slope as drawn (the chart is stretched to its box).
+            if (planeRef.current && chartRef.current) {
+                const e = 0.004
+                const a = Math.max(0, x - e)
+                const b = Math.min(1, x + e)
+                const dy = (capability(b) - capability(a)) * ((H - PAD * 2) / H) * chartRef.current.clientHeight
+                const dx = (b - a) * chartRef.current.clientWidth
+                const pitch = Math.min(32, (Math.atan2(dy, dx) * 180) / Math.PI)
+                planeRef.current.style.transform = `rotate(${-pitch}deg)`
             }
             if (readoutRef.current) {
+                readoutRef.current.style.opacity = x < 0.995 ? "1" : "0"
                 const step = String(Math.round(x * 24000)).padStart(5, "0")
                 readoutRef.current.textContent = `step ${step} · ${capability(x).toFixed(2)}`
                 // Keep the readout inside the chart: right of the tip early on, left of it later.
@@ -85,11 +119,12 @@ const Trajectory = () => {
             x: 1,
             ease: "none",
             onUpdate: () => render(state.x),
+            // Fly the whole run while the chart is on screen, so the climb-out is seen.
             scrollTrigger: {
-                trigger: block,
-                start: "top 72%",
-                end: "bottom 62%",
-                scrub: 0.6,
+                trigger: chartRef.current,
+                start: "top 85%",
+                end: "bottom 40%",
+                scrub: 0.8,
             },
         })
     }, { scope: blockRef })
@@ -115,7 +150,7 @@ const Trajectory = () => {
                         <span className="hidden sm:inline">one training run · illustrative</span>
                     </div>
 
-                    <div className="relative h-50 sm:h-70 lg:h-85">
+                    <div ref={chartRef} className="relative h-50 sm:h-70 lg:h-85">
                         <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden className="absolute inset-0 h-full w-full overflow-visible">
                             <defs>
                                 <clipPath id="trajectory-reveal">
@@ -163,12 +198,14 @@ const Trajectory = () => {
                             </div>
                         ))}
 
-                        {/* Tip of the run with a live readout */}
+                        {/* The run's tip: a plane flying the curve (the gold line is its contrail) */}
                         <div ref={tipRef} aria-hidden className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 opacity-0">
-                            <span className="block size-2 rounded-full bg-gold shadow-[0_0_14px_2px_rgb(207_163_85/0.6)]" />
+                            <div ref={planeRef} className="origin-center will-change-transform" style={{ translate: "-30% 0" }}>
+                                <Plane />
+                            </div>
                             <span
                                 ref={readoutRef}
-                                className="absolute bottom-3 whitespace-nowrap bg-gold px-1.5 py-px font-mono text-[10px] leading-3.5 tracking-[0.06em] text-ink"
+                                className="absolute bottom-6 whitespace-nowrap sm:bottom-7 transition-opacity duration-300 bg-gold px-1.5 py-px font-mono text-[10px] leading-3.5 tracking-[0.06em] text-ink"
                             />
                         </div>
                     </div>
