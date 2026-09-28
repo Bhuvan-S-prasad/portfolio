@@ -32,6 +32,14 @@ const MODEL_NOTE = "Edge filter + hand-labelled regions — how a vision model m
 const clamp = (v: number, min: number, max: number) =>
     Math.min(Math.max(v, min), max);
 
+// Lazy images change the page height as they arrive; re-measure every
+// ScrollTrigger below them once loading settles.
+let refreshTimer = 0;
+const refreshSoon = () => {
+    window.clearTimeout(refreshTimer);
+    refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 200);
+};
+
 /* ──────────────────────────────────────────────────────────────────────────
    DESKTOP GALLERY
 
@@ -476,6 +484,7 @@ const MobileCard = ({ art, index, modelView }: { art: Artwork; index: number; mo
                     src={art.image}
                     alt={art.name}
                     loading="lazy"
+                    onLoad={refreshSoon}
                     style={{
                         display: "block", width: "100%", height: "auto",
                         objectFit: "contain",
