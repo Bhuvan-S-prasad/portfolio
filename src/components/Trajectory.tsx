@@ -197,7 +197,7 @@ const Trajectory = () => {
                 </div>
 
                 {/* ── Checkpoint notes: stacked on mobile, pinned under their markers on desktop ── */}
-                <ol className="relative mt-10 grid gap-10 md:mt-6 md:block md:h-56 lg:h-52">
+                <ol className="relative mt-10 grid gap-10 md:mt-6 md:block md:h-84 lg:h-72">
                     {trajectory.checkpoints.map((c, i) => (
                         <li
                             key={c.at}
@@ -209,6 +209,7 @@ const Trajectory = () => {
                         >
                             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gold">{c.tag}</p>
                             <h3 className="mt-3 text-2xl lg:text-3xl font-extralight tracking-[-0.02em]">{c.title}</h3>
+                            <p className="mt-2 font-serif text-lg italic leading-snug text-white/80 lg:text-xl">{c.subtitle}</p>
                             <p className="mt-3 text-sm lg:text-base font-light leading-relaxed text-white/55">{c.body}</p>
                         </li>
                     ))}

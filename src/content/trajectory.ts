@@ -3,6 +3,8 @@ export type Checkpoint = {
     at: number;
     tag: string;
     title: string;
+    /** Short line under the title, e.g. "CS × AI". */
+    subtitle: string;
     body: string;
 };
 
@@ -15,19 +17,22 @@ export const trajectory = {
             at: 0.08,
             tag: "ckpt 01 · pretraining",
             title: "Foundations",
-            body: "BE in Computer Science Engineering (Artificial Intelligence). Machine learning, deep learning, vision and language — the fundamentals, learned properly.",
+            subtitle: "CS × AI",
+            body: "Started with the fundamentals. Learned to understand what happens beneath the abstraction — from algorithms and ML to vision and language.",
         },
         {
             at: 0.42,
             tag: "ckpt 02 · fine-tuning",
             title: "Building",
-            body: "Independent projects: agentic assistants, cited search, explainable medical imaging. Learning by shipping things that work.",
+            subtitle: "Ideas → Intelligence",
+            body: "Built agentic systems, retrieval pipelines, and explainable vision models. Every project was a training loop: build, fail, refine, ship.",
         },
         {
             at: 0.76,
             tag: "ckpt 03 · deployment",
-            title: "Deploying",
-            body: "AI Engineer in the aerospace industry — finding the bottlenecks in engineering workflows and building the AI that removes them.",
+            title: "Real World",
+            subtitle: "AI Engineer · Aerospace",
+            body: "Taking AI out of the notebook and into engineering. Building systems that eliminate friction, automate complexity, and augment how aerospace teams work.",
         },
     ] satisfies Checkpoint[],
 };
