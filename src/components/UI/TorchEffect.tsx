@@ -2,11 +2,9 @@ import { useEffect, useRef, type ReactNode } from "react";
 
 interface TorchEffectProps {
     children: ReactNode;
-    /** Lift the darkness entirely (e.g. while the paragraph is being explained). */
-    revealed?: boolean;
 }
 
-const TorchEffect = ({ children, revealed = false }: TorchEffectProps) => {
+const TorchEffect = ({ children }: TorchEffectProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -67,9 +65,8 @@ const TorchEffect = ({ children, revealed = false }: TorchEffectProps) => {
             </div>
             <div
                 ref={overlayRef}
-                className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-700"
+                className="absolute inset-0 pointer-events-none z-10"
                 style={{
-                    opacity: revealed ? 0 : 1,
                     background: `radial-gradient(
                         circle 250px at var(--torch-x, -1000px) var(--torch-y, -1000px),
                         transparent 0%,

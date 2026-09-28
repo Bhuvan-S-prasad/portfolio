@@ -16,9 +16,14 @@ const pad = (n: number) => String(n).padStart(2, "0")
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
 const github = socials.find((s) => s.name.toLowerCase() === "github")
 
-/** Same length as `text`, spaces kept, every other character a random noise glyph. */
-const noiseFor = (text: string) =>
-    text.replace(/\S/g, () => NOISE[Math.floor(Math.random() * NOISE.length)])
+const noiseGlyph = () => NOISE[Math.floor(Math.random() * NOISE.length)]
+
+/**
+ * One letter of a project name. While unresolved it carries a noise glyph in
+ * `data-n`, drawn over the (transparent) real letter, so the name keeps its exact
+ * width and line breaks whatever glyph is showing.
+ */
+const LETTER = "relative data-n:text-transparent after:pointer-events-none after:absolute after:inset-0 after:text-center after:text-black after:content-[attr(data-n)]"
 
 /**
  * Selected work, rendered on scroll. On desktop the section pins and the
@@ -57,13 +62,15 @@ const Projects = () => {
         const track = trackRef.current
         if (!track) return
         const reduced = prefersReducedMotion()
-        // Per frame: how many letters of the name have resolved, and the last text written.
+        // Per frame: how many letters of the name have resolved, and the progress last seen.
         const resolved = projects.map(() => -1)
+        const lastP = projects.map(() => -1)
+        const letters = nameRefs.current.map((el) => (el ? [...el.querySelectorAll<HTMLElement>("[data-c]")] : []))
         // Once a frame has fully rendered it stays rendered (sliding behind the index shouldn't re-noise it).
         const done = projects.map(() => false)
         const readyFor = projects.map(() => 0) // consecutive ticks at full progress
         // Names start as noise, so none is ever shown finished before its frame renders.
-        if (!reduced) nameRefs.current.forEach((el, i) => { if (el) el.textContent = noiseFor(projects[i].name) })
+        if (!reduced) letters.forEach((row) => row.forEach((c) => { c.dataset.n = noiseGlyph() }))
         let frame = 0
         const mm = gsap.matchMedia()
 
@@ -124,15 +131,20 @@ const Projects = () => {
                 denoiseRefs.current[i]?.set(p)
 
                 // The name denoises with the image: letters resolve left to right as p
-                // grows, the rest flicker as noise glyphs until the frame is ready.
-                const name = nameRefs.current[i]
-                if (name) {
-                    const full = projects[i].name
-                    const count = p >= 1 ? full.length : Math.floor(Math.pow(p, 1.4) * full.length)
-                    const flicker = count < full.length && frame % 4 === 0
+                // grows. The rest flicker only while the frame is moving, so a frame
+                // waiting at the edge of the stage sits still.
+                const row = letters[i]
+                if (row.length && !reduced) {
+                    const count = p >= 1 ? row.length : Math.floor(Math.pow(p, 1.4) * row.length)
+                    const moving = Math.abs(p - lastP[i]) > 0.001
+                    lastP[i] = p
+                    const flicker = moving && count < row.length && frame % 4 === 0
                     if (count !== resolved[i] || flicker) {
                         resolved[i] = count
-                        name.textContent = full.slice(0, count) + noiseFor(full.slice(count))
+                        row.forEach((c, k) => {
+                            if (k < count) delete c.dataset.n
+                            else c.dataset.n = noiseGlyph()
+                        })
                     }
                 }
 
@@ -266,10 +278,14 @@ const Projects = () => {
                                     <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-8">
                                         <h3
                                             ref={(el) => { nameRefs.current[i] = el }}
-                                            aria-label={project.name}
                                             className="text-4xl sm:text-5xl lg:text-6xl font-extralight leading-[0.95] tracking-[-0.035em] text-black"
                                         >
-                                            {project.name}
+                                            <span className="sr-only">{project.name}</span>
+                                            <span aria-hidden>
+                                                {[...project.name].map((ch, k) =>
+                                                    ch === " " ? " " : <span key={k} data-c className={LETTER}>{ch}</span>
+                                                )}
+                                            </span>
                                         </h3>
                                         <p className="max-w-[34ch] font-serif text-lg italic leading-snug text-black/60 lg:text-xl md:text-right">
                                             {project.caseFile.tagline}
