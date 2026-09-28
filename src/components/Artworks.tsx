@@ -113,6 +113,9 @@ const DesktopGallery = ({ artworks }: { artworks: Artwork[] }) => {
         window.addEventListener("scroll", onScroll, { passive: true });
 
         const tick = () => {
+            // Re-read the scroll position every frame too: a jump (e.g. from the
+            // page map) can land without a final scroll event reaching us.
+            onScroll();
             const track = trackRef.current;
             if (track) {
                 renderXRef.current += (targetXRef.current - renderXRef.current) * 0.09;
