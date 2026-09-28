@@ -7,8 +7,15 @@ import { profile, aboutAttribution } from "../content/profile"
 const About = () => {
     const [explaining, setExplaining] = useState(false)
 
-    const paragraph = (
-        <AttributedText text={profile.about.body} weights={aboutAttribution} active={explaining} />
+    // A lead paragraph at full size, then the detail a step smaller.
+    const paragraphs = (
+        <div className="flex max-w-6xl flex-col gap-6 md:gap-10">
+            {profile.about.body.map((text, i) => (
+                <p key={i} className={i === 0 ? "" : "text-base sm:text-lg md:text-2xl lg:text-3xl font-light text-white/85 leading-relaxed"}>
+                    <AttributedText text={text} weights={aboutAttribution} active={explaining} />
+                </p>
+            ))}
+        </div>
     )
 
     return (
@@ -33,7 +40,7 @@ const About = () => {
                         transition-colors duration-300 hover:border-gold/60 hover:text-white"
                 >
                     <span className={`size-1.5 rounded-full transition-colors duration-300 ${explaining ? "bg-ember" : "bg-gold"}`} />
-                    {explaining ? "Hide attribution" : "Explain this paragraph"}
+                    {explaining ? "Hide attribution" : "Explain this text"}
                 </button>
 
                 <div
@@ -53,13 +60,13 @@ const About = () => {
 
             <div className="flex flex-col items-center justify-center">
                 <div className="block md:hidden px-5 sm:px-8 py-12 sm:py-16">
-                    <p className="text-lg sm:text-xl font-light tracking-wide text-white/90 leading-relaxed">
-                        {paragraph}
-                    </p>
+                    <div className="text-lg sm:text-xl font-light tracking-wide text-white/90 leading-relaxed">
+                        {paragraphs}
+                    </div>
                 </div>
 
                 <div className="hidden md:block">
-                    <TorchEffect revealed={explaining}>{paragraph}</TorchEffect>
+                    <TorchEffect revealed={explaining}>{paragraphs}</TorchEffect>
                 </div>
             </div>
         </section>

@@ -10,7 +10,7 @@ interface AttributedTextProps {
 }
 
 const STOP_WORDS = new Set([
-    "i'm", "an", "a", "the", "in", "where", "i", "and", "that", "make", "them",
+    "i'm", "im", "an", "a", "the", "in", "where", "i", "and", "that", "make", "them",
     "more", "my", "from", "to", "with", "on", "of", "built", "focus", "spans",
     "background", "working", "systems", "models",
 ]);
