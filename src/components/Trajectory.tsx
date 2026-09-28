@@ -1,5 +1,6 @@
 import { useRef } from "react"
 import AnimatedHeader from "./UI/AnimatedHeader"
+import Plane from "./UI/Plane"
 import { trajectory } from "../content/trajectory"
 import { gsap, useGSAP, prefersReducedMotion } from "../lib/motion"
 
@@ -32,26 +33,6 @@ const path = (fn: (x: number) => number) =>
 
 const SMOOTH = path(capability)
 const RAW = path((x) => capability(x) + noise(x))
-
-/** Side-view airliner, nose to the right, drawn in a 48×18 box. */
-const Plane = () => (
-    <svg viewBox="0 0 48 18" className="block h-6 w-16 overflow-visible drop-shadow-[0_0_12px_rgb(207_163_85/0.5)] sm:h-7.5 sm:w-20" aria-hidden>
-        <g fill="var(--color-gold)">
-            {/* tail fin + tailplane */}
-            <path d="M3.2 8.6 L1.4 2.2 Q1.3 1.6 2 1.6 L4.6 1.6 Q5.2 1.6 5.6 2.1 L10.4 8.2 Z" />
-            <path d="M3.6 10.6 L0.9 13.1 Q0.6 13.6 1.2 13.6 L3.3 13.6 L8.6 10.6 Z" />
-            {/* fuselage */}
-            <path d="M2.4 10 C2.4 8.7 4 8.1 7.8 8.1 L38.5 8.1 C43.2 8.1 46.1 9 47.3 10 C46.1 11 43.2 11.9 38.5 11.9 L7.8 11.9 C4 11.9 2.4 11.3 2.4 10 Z" />
-            {/* wing */}
-            <path d="M19.2 10.6 L13.6 16.4 Q13.3 16.9 13.9 16.9 L17.2 16.9 Q17.9 16.9 18.3 16.4 L27.8 10.6 Z" />
-        </g>
-        {/* cabin windows + cockpit */}
-        <g fill="var(--color-ink)" opacity="0.55">
-            {[12, 15, 18, 21, 24, 27, 30, 33, 36].map((x) => <rect key={x} x={x} y="9" width="1.3" height="1.1" rx="0.4" />)}
-            <path d="M41.6 9.1 L44.4 9.4 L43.6 10.1 L41.6 10.1 Z" />
-        </g>
-    </svg>
-)
 
 const pct = (x: number) => `${x * 100}%`
 const topPct = (x: number) => `${(toY(capability(x)) / H) * 100}%`
@@ -201,7 +182,7 @@ const Trajectory = () => {
                         {/* The run's tip: a plane flying the curve (the gold line is its contrail) */}
                         <div ref={tipRef} aria-hidden className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 opacity-0">
                             <div ref={planeRef} className="origin-center will-change-transform" style={{ translate: "-30% 0" }}>
-                                <Plane />
+                                <Plane className="h-6 w-16 drop-shadow-[0_0_12px_rgb(207_163_85/0.5)] sm:h-7.5 sm:w-20" />
                             </div>
                             <span
                                 ref={readoutRef}
@@ -216,7 +197,7 @@ const Trajectory = () => {
                 </div>
 
                 {/* ── Checkpoint notes: stacked on mobile, pinned under their markers on desktop ── */}
-                <ol className="relative mt-10 grid gap-10 md:mt-6 md:block md:h-56 lg:h-52">
+                <ol className="relative mt-10 grid gap-10 md:mt-6 md:block md:h-84 lg:h-72">
                     {trajectory.checkpoints.map((c, i) => (
                         <li
                             key={c.at}
@@ -228,6 +209,7 @@ const Trajectory = () => {
                         >
                             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-gold">{c.tag}</p>
                             <h3 className="mt-3 text-2xl lg:text-3xl font-extralight tracking-[-0.02em]">{c.title}</h3>
+                            <p className="mt-2 font-serif text-lg italic leading-snug text-white/80 lg:text-xl">{c.subtitle}</p>
                             <p className="mt-3 text-sm lg:text-base font-light leading-relaxed text-white/55">{c.body}</p>
                         </li>
                     ))}
